@@ -4,33 +4,36 @@
 #include "GfxLib.h" 
 #include "BmpLib.h"
 #include "ESLib.h" 
+#include "conway.h"
 
 #define LargeurFenetre 800
 #define HauteurFenetre 600
-#define CellSize 10
-#define InBetween 2
+#define lignes_grilles 10
+#define colonnes_grilles 10
+#define CellSize 50
+#define InBetween 1
 
 void gestionEvenement(EvenementGfx evenement);
 
-
+int **grille=NULL;
 
 int main(int argc, char **argv)
 {
 	initialiseGfx(argc, argv);
 	prepareFenetreGraphique("CONWAY", LargeurFenetre, HauteurFenetre);
+	modePleinEcran();
 	lanceBoucleEvenements();
-	
+	LibererMemoireGrille(grille);
 	return 0;
 }
 
 void gestionEvenement(EvenementGfx evenement)
 {
-	static bool pleinEcran = false;
-	
-		
 	switch (evenement)
 	{
-		case Initialisation:
+
+		case Initialisation:;
+			InitialisationGrille(grille);
 			demandeTemporisation(20);
 			break;
 		
@@ -40,8 +43,11 @@ void gestionEvenement(EvenementGfx evenement)
 			
 		case Affichage:
 			
-			effaceFenetre(255,255,255);
-			
+			effaceFenetre(0,0,0);
+			couleurCourante(255,255,255);
+			epaisseurDeTrait(3);
+			ligne(0,hauteurFenetre()*0.12,largeurFenetre(),hauteurFenetre()*0.12);
+			/*
 			for ( int i = 0; i < largeurFenetre(); i++ ){
 				for ( int j = 0; j < hauteurFenetre(); j++ ){
 					
@@ -55,7 +61,7 @@ void gestionEvenement(EvenementGfx evenement)
 					rectangle(RTCx, RTCy, LBCx, LBCy);
 				}
 			}
-			
+			*/
 			break;
 			
 		case Clavier:
@@ -66,30 +72,6 @@ void gestionEvenement(EvenementGfx evenement)
 				case 'Q': 
 				case 'q':
 					termineBoucleEvenements();
-					break;
-
-				case 'F':
-				case 'f':
-					pleinEcran = !pleinEcran; 
-					if (pleinEcran)
-						modePleinEcran();
-					else
-						redimensionneFenetre(LargeurFenetre, HauteurFenetre);
-					break;
-
-				case 'R':
-				case 'r':
-					demandeTemporisation(20);
-					break;
-
-				case 'L':
-				case 'l':
-					demandeTemporisation(100);
-					break;
-
-				case 'S':
-				case 's':
-					demandeTemporisation(-1);
 					break;
 			}
 			break;
@@ -122,3 +104,27 @@ void gestionEvenement(EvenementGfx evenement)
 	}
 }
 
+void InitialisationGrille(int** grille)
+{
+	grille = (int**)malloc(lignes_grilles*sizeof(int*));
+	for(int i=0;i<colonnes_grilles;i++)
+	{
+		grille[i]=(int*)malloc(colonnes_grilles*sizeof(int));
+	}
+	for(int i=0;i<lignes_grilles;i++)
+	{
+		for(int j=0;j<colonnes_grilles;j++)
+		{
+			grille[i][j]=0;
+		}
+	}
+}
+
+void LibererMemoireGrille(int** grille)
+{
+	for(int i=0;i<colonnes_grilles;i++)
+	{
+		free(grille[i]);
+	}
+	free(grille);
+}
