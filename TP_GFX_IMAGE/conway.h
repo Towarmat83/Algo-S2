@@ -4,5 +4,7 @@
 
 void InitialisationGrille(int** grille); 
 void LibererMemoireGrille(int** grille);
+void AffichageMenu(void);
+void AffichageGrille(void);
 
 #endif

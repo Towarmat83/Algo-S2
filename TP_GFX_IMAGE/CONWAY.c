@@ -6,16 +6,16 @@
 #include "ESLib.h" 
 #include "conway.h"
 
-#define LargeurFenetre 800
-#define HauteurFenetre 600
-#define lignes_grilles 10
-#define colonnes_grilles 10
-#define CellSize 50
-#define InBetween 1
+#define LargeurFenetre 1200
+#define HauteurFenetre 1000
 
 void gestionEvenement(EvenementGfx evenement);
 
 int **grille=NULL;
+int lignes_grilles=40;
+int colonnes_grilles=40;
+int *pt_lignes_grilles=&lignes_grilles;
+int *pt_colonnes_grilles=&colonnes_grilles;
 
 int main(int argc, char **argv)
 {
@@ -42,26 +42,12 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 			
 		case Affichage:
-			
 			effaceFenetre(0,0,0);
 			couleurCourante(255,255,255);
+			epaisseurDeTrait(2);
+			AffichageGrille();
 			epaisseurDeTrait(3);
-			ligne(0,hauteurFenetre()*0.12,largeurFenetre(),hauteurFenetre()*0.12);
-			/*
-			for ( int i = 0; i < largeurFenetre(); i++ ){
-				for ( int j = 0; j < hauteurFenetre(); j++ ){
-					
-					couleurCourante(46,148,242);
-					
-					int LBCx = InBetween*(i+1) + CellSize*(i);
-					int LBCy = InBetween*(j+1) + CellSize*(j+1);
-					int RTCx = InBetween*(i+1) + CellSize*(i+1);
-					int RTCy = InBetween*(j+1) + CellSize*(j);
-					
-					rectangle(RTCx, RTCy, LBCx, LBCy);
-				}
-			}
-			*/
+			AffichageMenu();
 			break;
 			
 		case Clavier:
@@ -72,6 +58,11 @@ void gestionEvenement(EvenementGfx evenement)
 				case 'Q': 
 				case 'q':
 					termineBoucleEvenements();
+					break;
+
+				case 'F':
+				case 'f':
+					modePleinEcran();	
 					break;
 			}
 			break;
@@ -127,4 +118,26 @@ void LibererMemoireGrille(int** grille)
 		free(grille[i]);
 	}
 	free(grille);
+}
+
+void AffichageMenu(void)
+{
+	couleurCourante(0,255,0);
+	ligne(0,hauteurFenetre()*0.12,largeurFenetre(),hauteurFenetre()*0.12);
+	couleurCourante(0,0,0);
+	rectangle(0,hauteurFenetre()*0.12,largeurFenetre(),0);
+}
+
+void AffichageGrille()
+{
+	couleurCourante(255,255,255);
+	float ratio = ((float)largeurFenetre()/(float)lignes_grilles);
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		ligne(ratio*i,0,ratio*i,hauteurFenetre());
+	}
+	for(int j=0;j<colonnes_grilles+1;j++)
+	{
+		ligne(0,ratio*j,largeurFenetre(),ratio*j);
+	}
 }
