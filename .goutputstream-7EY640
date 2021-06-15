@@ -1,0 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char **argc)
+{	
+	printf("Le résultat est:%d\n", c);
+	return 0;
+}
