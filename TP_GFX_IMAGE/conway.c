@@ -11,19 +11,13 @@
 
 void gestionEvenement(EvenementGfx evenement);
 
-int **grille=NULL;
-int lignes_grilles=40;
-int colonnes_grilles=40;
-int *pt_lignes_grilles=&lignes_grilles;
-int *pt_colonnes_grilles=&colonnes_grilles;
-
 int main(int argc, char **argv)
 {
 	initialiseGfx(argc, argv);
 	prepareFenetreGraphique("CONWAY", LargeurFenetre, HauteurFenetre);
 	modePleinEcran();
 	lanceBoucleEvenements();
-	LibererMemoireGrille(grille);
+	LibererMemoireGrille();
 	return 0;
 }
 
@@ -31,9 +25,8 @@ void gestionEvenement(EvenementGfx evenement)
 {
 	switch (evenement)
 	{
-
 		case Initialisation:;
-			InitialisationGrille(grille);
+			InitialisationGrille();
 			demandeTemporisation(20);
 			break;
 		
@@ -46,6 +39,7 @@ void gestionEvenement(EvenementGfx evenement)
 			couleurCourante(255,255,255);
 			epaisseurDeTrait(2);
 			AffichageGrille();
+			AffichageMatrice();
 			epaisseurDeTrait(3);
 			AffichageMenu();
 			break;
@@ -74,11 +68,7 @@ void gestionEvenement(EvenementGfx evenement)
 		case BoutonSouris:
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
-				printf("Bouton gauche appuye en : (%d, %d)\n", abscisseSouris(), ordonneeSouris());
-			}
-			else if (etatBoutonSouris() == GaucheRelache)
-			{
-				printf("Bouton gauche relache en : (%d, %d)\n", abscisseSouris(), ordonneeSouris());
+				SourisCase();
 			}
 			break;
 		
@@ -95,7 +85,7 @@ void gestionEvenement(EvenementGfx evenement)
 	}
 }
 
-void InitialisationGrille(int** grille)
+void InitialisationGrille()
 {
 	grille = (int**)malloc(lignes_grilles*sizeof(int*));
 	for(int i=0;i<colonnes_grilles;i++)
@@ -111,7 +101,7 @@ void InitialisationGrille(int** grille)
 	}
 }
 
-void LibererMemoireGrille(int** grille)
+void LibererMemoireGrille(void)
 {
 	for(int i=0;i<colonnes_grilles;i++)
 	{
@@ -128,7 +118,7 @@ void AffichageMenu(void)
 	rectangle(0,hauteurFenetre()*0.12,largeurFenetre(),0);
 }
 
-void AffichageGrille()
+void AffichageGrille(void)
 {
 	couleurCourante(255,255,255);
 	float ratio = ((float)largeurFenetre()/(float)lignes_grilles);
@@ -139,5 +129,47 @@ void AffichageGrille()
 	for(int j=0;j<colonnes_grilles+1;j++)
 	{
 		ligne(0,ratio*j,largeurFenetre(),ratio*j);
+	}
+}
+
+void SourisCase(void)
+{
+	float ratio = ((float)largeurFenetre()/(float)lignes_grilles);
+	float x = abscisseSouris();
+	float y = ordonneeSouris();
+	int ligneX=0;
+	int colonneY=0;
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		if(ratio*i>x)
+		{
+			ligneX=i;
+			break;
+		}
+	}
+	for(int j=0;j<colonnes_grilles+1;j++)
+	{
+		if(ratio*j>y)
+		{
+			colonneY=j;
+			break;
+		}
+	}
+	grille[ligneX][colonneY]=1;
+}
+
+void AffichageMatrice(void)
+{
+	float ratio = ((float)largeurFenetre()/(float)lignes_grilles);
+	for(int i=0;i<lignes_grilles;i++)
+	{
+		for(int j=0;j<colonnes_grilles;j++)
+		{
+			if(grille[i][j]==1)
+			{
+				couleurCourante(255,169,0);
+				rectangle(i*ratio,j*ratio,i*ratio-ratio,j*ratio-ratio);
+			}
+		}
 	}
 }

@@ -1,8 +1,8 @@
-CONWAY: CONWAY.o libisentlib.a conway.h
-	gcc -Wall CONWAY.o -o CONWAY libisentlib.a -lm -lglut -lGL -lX11
+conway: conway.o libisentlib.a conway.h
+	gcc -Wall conway.o -o conway libisentlib.a -lm -lglut -lGL -lX11
 # Sous MacOSX, commenter la ligne de commande ci-dessus (en mettant un # au debut)
 # et de-commenter la ligne de commande ci-apres :
-#	gcc -Wall CONWAY.o -o CONWAY libisentlib.a -lm -framework OpenGL -framework GLUT
+#	gcc -Wall conway.o -o conway libisentlib.a -lm -framework OpenGL -framework GLUT
 
 exempleTortue: exempleTortue.o libisentlib.a
 	gcc -Wall exempleTortue.o -o exempleTortue libisentlib.a -lm -lglut -lGL -lX11
@@ -10,8 +10,8 @@ exempleTortue: exempleTortue.o libisentlib.a
 # et de-commenter la ligne de commande ci-apres :
 #	gcc -Wall exempleTortue.o -o exempleTortue libisentlib.a -lm -framework OpenGL -framework GLUT
 
-CONWAY.o: CONWAY.c GfxLib.h BmpLib.h ESLib.h conway.h
-	gcc -Wall -c CONWAY.c conway.h
+conway.o: conway.c GfxLib.h BmpLib.h ESLib.h conway.h
+	gcc -Wall -c conway.c conway.h
 
 exempleTortue.o: exempleTortue.c GfxLib.h BmpLib.h ESLib.h TortueLib.h
 	gcc -Wall -c exempleTortue.c

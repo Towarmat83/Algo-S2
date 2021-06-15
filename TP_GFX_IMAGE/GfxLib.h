@@ -111,7 +111,7 @@ void initialiseGfx(int argc, char **argv);
    de largeur pixels sur hauteur pixels */
 void prepareFenetreGraphique(const char *nom, int largeur, int hauteur);
 /* Lance la boucle de gestion des evenements */
-void lanceBoucleEvenements(void);
+void lanceBoucleEvenements();
 /* Termine le programme proprement */
 void termineBoucleEvenements(void);
 
