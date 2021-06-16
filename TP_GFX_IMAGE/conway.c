@@ -45,17 +45,10 @@ void gestionEvenement(EvenementGfx evenement)
 			AffichageMatrice(lignes2,colonnes2);
 			epaisseurDeTrait(3);
 			AffichageMenu();
-<<<<<<< HEAD
 			couleurCourante(255,255,255);
 			SliderZoom(); 
 			Curseur();
 			AfficheBtnLecture();
-=======
-			epaisseurDeTrait(2);
-			AfficheBtnPlus(etatBtnPlus);
-			epaisseurDeTrait(2);
-			AfficheBtnMoins(etatBtnMoins);
->>>>>>> fc3b4f4ec6159da9204d74ffa3204a40acc5d1ef
 			break;
 			
 		case Clavier:
@@ -82,7 +75,6 @@ void gestionEvenement(EvenementGfx evenement)
 		case BoutonSouris:
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
-<<<<<<< HEAD
 				printf("\n%d",abscisseSouris());
 				if(ordonneeSouris()>(hauteurFenetre()*0.12))
 				{
@@ -103,28 +95,6 @@ void gestionEvenement(EvenementGfx evenement)
 				{
 					etat = 1-etat;
 				}
-=======
-				if(ordonneeSouris()>hauteurFenetre()*0.12){
-					SourisCase();
-				}
-				//Pour bouton Plus
-				if(abscisseSouris()>=largeurFenetre()*0.8 && ordonneeSouris()<=hauteurFenetre()*0.12*0.9 && abscisseSouris()<=largeurFenetre()*0.9 && ordonneeSouris()>=hauteurFenetre()*0.12*0.1){
-					BtnPlus(pt_lignes_grilles, pt_colonnes_grilles); 
-					etatBtnPlus=1;
-					printf("%d\n", lignes_grilles);
-				}
-				//Pour bouton Moins
-				if(abscisseSouris()>=largeurFenetre()*0.68 && ordonneeSouris()<=hauteurFenetre()*0.12*0.9 && abscisseSouris()<=largeurFenetre()*0.78 && ordonneeSouris()>=hauteurFenetre()*0.12*0.1){
-					BtnMoins(pt_lignes_grilles, pt_colonnes_grilles); 
-					etatBtnMoins=1;
-					printf("%d\n", lignes_grilles);
-				}
-			}
-			else if (etatBoutonSouris() == GaucheRelache)
-			{
-				etatBtnMoins=0;
-				etatBtnPlus=0;
->>>>>>> fc3b4f4ec6159da9204d74ffa3204a40acc5d1ef
 			}
 			break;
 		
@@ -239,7 +209,6 @@ void AffichageMatrice(float lignes2,float colonnes2)
 	}
 }
 
-<<<<<<< HEAD
 void SliderZoom() 
 {
 	couleurCourante(255,255,255);
@@ -373,64 +342,3 @@ void AfficheBtnLecture(void)
 		triangle(376,46,376,83,410,64);
 	}
 }
-=======
-void AfficheBtnPlus(int etatBtnPlus){
-	if(etatBtnPlus==0){
-		couleurCourante(0, 0, 0);
-		rectangle(largeurFenetre()*0.8, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.9, hauteurFenetre()*0.12*0.1);
-		epaisseurDeTrait(3);
-		couleurCourante(255, 255, 255);
-		ligne(largeurFenetre()*0.85, hauteurFenetre()*0.12*0.7, largeurFenetre()*0.85, hauteurFenetre()*0.12*0.3);
-		ligne(largeurFenetre()*0.83, hauteurFenetre()*0.12*0.5, largeurFenetre()*0.87, hauteurFenetre()*0.12*0.5);
-		epaisseurDeTrait(2);
-		ligne(largeurFenetre()*0.8, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.9, hauteurFenetre()*0.12*0.9);
-		ligne(largeurFenetre()*0.8, hauteurFenetre()*0.12*0.1, largeurFenetre()*0.9, hauteurFenetre()*0.12*0.1);
-		ligne(largeurFenetre()*0.8, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.8, hauteurFenetre()*0.12*0.1);
-		ligne(largeurFenetre()*0.9, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.9, hauteurFenetre()*0.12*0.1);
-	}
-	else if(etatBtnPlus==1){
-		couleurCourante(255, 255, 255);
-		rectangle(largeurFenetre()*0.8, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.9, hauteurFenetre()*0.12*0.1);
-		epaisseurDeTrait(3);
-		couleurCourante(0, 0, 0);
-		ligne(largeurFenetre()*0.85, hauteurFenetre()*0.12*0.7, largeurFenetre()*0.85, hauteurFenetre()*0.12*0.3);
-		ligne(largeurFenetre()*0.83, hauteurFenetre()*0.12*0.5, largeurFenetre()*0.87, hauteurFenetre()*0.12*0.5);
-	}
-}
-
-void BtnMoins(int *lignes, int *colonnes){
-	if(*lignes<146){
-		*lignes=*lignes+5;
-		*colonnes=*colonnes+5;
-	}
-}
-
-void AfficheBtnMoins(int etatBtnMoins){
-	if(etatBtnMoins==0){
-		couleurCourante(0, 0, 0);
-		rectangle(largeurFenetre()*0.68, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.78, hauteurFenetre()*0.12*0.1);
-		epaisseurDeTrait(3);
-		couleurCourante(255, 255, 255);
-		ligne(largeurFenetre()*0.71, hauteurFenetre()*0.12*0.5, largeurFenetre()*0.75, hauteurFenetre()*0.12*0.5);
-		epaisseurDeTrait(2);
-		ligne(largeurFenetre()*0.68, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.78, hauteurFenetre()*0.12*0.9);
-		ligne(largeurFenetre()*0.68, hauteurFenetre()*0.12*0.1, largeurFenetre()*0.78, hauteurFenetre()*0.12*0.1);
-		ligne(largeurFenetre()*0.68, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.68, hauteurFenetre()*0.12*0.1);
-		ligne(largeurFenetre()*0.78, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.78, hauteurFenetre()*0.12*0.1);
-	}
-	else if(etatBtnMoins==1){
-		couleurCourante(255, 255, 255);
-		rectangle(largeurFenetre()*0.68, hauteurFenetre()*0.12*0.9, largeurFenetre()*0.78, hauteurFenetre()*0.12*0.1);
-		epaisseurDeTrait(3);
-		couleurCourante(0, 0, 0);
-		ligne(largeurFenetre()*0.71, hauteurFenetre()*0.12*0.5, largeurFenetre()*0.75, hauteurFenetre()*0.12*0.5);
-	}
-}
-
-void BtnPlus(int *lignes, int *colonnes){
-	if(*lignes>6){
-		*lignes=*lignes-5;
-		*colonnes=*colonnes-5;
-	}
-}
->>>>>>> fc3b4f4ec6159da9204d74ffa3204a40acc5d1ef
