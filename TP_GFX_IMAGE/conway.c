@@ -30,15 +30,31 @@ void gestionEvenement(EvenementGfx evenement)
 		case Initialisation:;
 			InitialisationGrille();
 			InitialisationGrillet1();
-			demandeTemporisation(300);
+			demandeTemporisation(24);
 			break;
 		
 		case Temporisation:
 			ModifierPositionCurseur();
+			if (etatBoutonSouris() == GaucheAppuye)
+			{
+				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
+				{
+					SourisCase(lignes2,colonnes2);
+				}
+			}
+			if(etatBoutonSouris() == DroiteAppuye)
+			{
+				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
+				{
+					RetirerCase(lignes2,colonnes2);
+				}
+				
+			}
 			if(etat==1)
 			{
 				RemplirGrillet1();
 				PassageTempsSuperieur();
+	
 			}
 			rafraichisFenetre();
 			break;
@@ -59,6 +75,8 @@ void gestionEvenement(EvenementGfx evenement)
 			SliderZoom(); 
 			Curseur();
 			AfficheBtnLecture();
+			AfficheBtnReset();
+			ModifierPositionCurseurCercle();
 			break;
 			
 		case Clavier:
@@ -80,23 +98,8 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 
 		case BoutonSouris:
-			if (etatBoutonSouris() == GaucheAppuye)
+			if(etatBoutonSouris() == DroiteAppuye || etatBoutonSouris() == GaucheAppuye)
 			{
-				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
-				{
-					SourisCase(lignes2,colonnes2);
-				}
-				if(sqrt(pow(390-abscisseSouris(),2)+pow(66-ordonneeSouris(),2))<=45)
-				{
-					etat = 1-etat;
-				}
-			}
-			if(etatBoutonSouris() == DroiteAppuye)
-			{
-				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
-				{
-					RetirerCase(lignes2,colonnes2);
-				}
 				if(sqrt(pow(390-abscisseSouris(),2)+pow(66-ordonneeSouris(),2))<=45)
 				{
 					etat = 1-etat;
@@ -252,10 +255,54 @@ void ModifierPositionCurseur(void)
 	{
 		if(abscisseSouris()>=largeurFenetre()-450 && abscisseSouris()<=largeurFenetre()-50)
 		{
-			if(ordonneeSouris()>=50 && ordonneeSouris()<=70)
+			if(ordonneeSouris()>=10 && ordonneeSouris()<=110)
 			{
 				float point = (4/3)*(abscisseSouris()-(largeurFenetre()-450));
 				curseur = largeurFenetre()-450+point;
+			}
+		}
+	}
+}
+
+void ModifierPositionCurseurCercle(void)
+{
+	if (etatBoutonSouris() == GaucheAppuye || etatBoutonSouris() == DroiteAppuye)
+	{
+		if(abscisseSouris()>=680 && abscisseSouris()<=1200)
+		{
+			if(ordonneeSouris()>=52 && ordonneeSouris()<=57)
+			{
+				if(boutonabscisse<732)
+				{
+					temp=0;
+					limitetemp=32;
+				}
+				if(boutonabscisse>=732 && boutonabscisse<836)
+				{
+					temp=0;
+					limitetemp=16;
+				}
+				if(boutonabscisse>=836 && boutonabscisse<940)
+				{
+					temp=0;
+					limitetemp=8;
+				}
+				if(boutonabscisse>=940 && boutonabscisse<1044)
+				{
+					temp=0;
+					limitetemp=4;
+				}
+				if(boutonabscisse>=1044 && boutonabscisse<1148)
+				{
+					temp=0;
+					limitetemp=2;
+				}
+				if(boutonabscisse>=1148 && boutonabscisse<=1200)
+				{
+					temp=0;
+					limitetemp=1;
+				}
+
 			}
 		}
 	}
@@ -618,7 +665,7 @@ void AffichageGrillet1(float lignes2,float colonnes2)
 		{
 			if(grillet1[i][j]==1)
 			{
-				couleurCourante(124, 125, 124);
+				couleurCourante(0,145,255);
 				rectangle(i*ratio,j*ratio,i*ratio-ratio,j*ratio-ratio);
 			}
 		}
@@ -635,3 +682,18 @@ void PassageTempsSuperieur(void)
 		}
 	}
 }
+void AfficheBtnReset(void){
+	couleurCourante(255,255,255); 
+	cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,45); // Cercle Pause
+	couleurCourante(0,0,0);
+	cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,42); // Cercle intérieur noir
+	couleurCourante(255,255,255); 
+	cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,25); 
+	couleurCourante(0,0,0);
+	cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,22);
+	couleurCourante(0,0,0);
+	rectangle(262,90,288,63);
+	couleurCourante(255,255,255);
+	triangle(largeurFenetre()*260/1920,hauteurFenetre()*81.5/1080,largeurFenetre()*260/1920,hauteurFenetre()*95.5/1080,largeurFenetre()*270/1920,hauteurFenetre()*88.5/1080);
+}
+

@@ -8,9 +8,11 @@ int colonnes_grilles=300; // MAX=300
 float curseur=1670;
 float lignes2=10;
 float colonnes2=10;
-float boutonabscisse=680;
+float boutonabscisse=992;
 int etat = 0;
 int **grillet1=NULL;
+static int temp=0;
+static int limitetemp=96;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -30,5 +32,7 @@ int ScanCellules(int i,int j);
 void ReglesConway(int nombre_voisin_vivant,int x,int y);
 void AffichageGrillet1(float lignes2,float colonnes2);
 void PassageTempsSuperieur(void);
+void ModifierPositionCurseurCercle(void);
+void AfficheBtnReset(void);
 
 #endif
