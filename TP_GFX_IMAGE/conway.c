@@ -120,14 +120,17 @@ void gestionEvenement(EvenementGfx evenement)
 
 void InitialiserLignesColonnesAffichage(void)
 {
-	lignes2=fabs((largeurFenetre()/1.3061-curseur)/(largeurFenetre()/4.8))*(largeurFenetre()/6.4);
+	//lignes2=fabs((largeurFenetre()/1.3061-curseur)/(largeurFenetre()/4.8))*(largeurFenetre()/6.4);
+	lignes2=fabs((1470-curseur)/400)*300;
 	colonnes2=lignes2;
 }
 
 void InitialiserVariablesGlobales(void)
 {
-	curseur=largeurFenetre()*1.328;
-	boutonabscisse=largeurFenetre()*1.935;
+	//curseur=largeurFenetre()*1.328;
+	//boutonabscisse=largeurFenetre()*1.935;
+	curseur=1550;
+	boutonabscisse=992;
 }
 
 void InitialisationGrille()
