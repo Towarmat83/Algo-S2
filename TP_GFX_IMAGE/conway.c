@@ -29,11 +29,17 @@ void gestionEvenement(EvenementGfx evenement)
 	{
 		case Initialisation:;
 			InitialisationGrille();
-			demandeTemporisation(20);
+			InitialisationGrillet1();
+			demandeTemporisation(300);
 			break;
 		
 		case Temporisation:
 			ModifierPositionCurseur();
+			if(etat==1)
+			{
+				RemplirGrillet1();
+				PassageTempsSuperieur();
+			}
 			rafraichisFenetre();
 			break;
 			
@@ -43,6 +49,10 @@ void gestionEvenement(EvenementGfx evenement)
 			epaisseurDeTrait(1);
 			AffichageGrille(lignes2,colonnes2);
 			AffichageMatrice(lignes2,colonnes2);
+			if(etat==1)
+			{
+				AffichageGrillet1(lignes2,colonnes2);
+			}
 			epaisseurDeTrait(3);
 			AffichageMenu();
 			couleurCourante(255,255,255);
@@ -52,8 +62,6 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 			
 		case Clavier:
-			printf("%c : ASCII %d\n", caractereClavier(), caractereClavier());
-
 			switch (caractereClavier())
 			{
 				case 'Q': 
@@ -69,14 +77,12 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 			
 		case ClavierSpecial:
-			printf("ASCII %d\n", toucheClavier());
 			break;
 
 		case BoutonSouris:
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
-				printf("\n%d",abscisseSouris());
-				if(ordonneeSouris()>(hauteurFenetre()*0.12))
+				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
 				{
 					SourisCase(lignes2,colonnes2);
 				}
@@ -87,7 +93,7 @@ void gestionEvenement(EvenementGfx evenement)
 			}
 			if(etatBoutonSouris() == DroiteAppuye)
 			{
-				if(ordonneeSouris()>(hauteurFenetre()*0.12))
+				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
 				{
 					RetirerCase(lignes2,colonnes2);
 				}
@@ -250,7 +256,6 @@ void ModifierPositionCurseur(void)
 			{
 				float point = (4/3)*(abscisseSouris()-(largeurFenetre()-450));
 				curseur = largeurFenetre()-450+point;
-				printf("\n%f",curseur);
 			}
 		}
 	}
@@ -340,5 +345,293 @@ void AfficheBtnLecture(void)
 	}
 	else if(etat == 0){ // Bouton Reprendre 
 		triangle(376,46,376,83,410,64);
+	}
+}
+
+void InitialisationGrillet1(void)
+{
+	grillet1 = (int**)malloc((lignes_grilles+1)*sizeof(int*));
+	for(int i=0;i<colonnes_grilles+1;i++)
+	{
+		grillet1[i]=(int*)malloc((colonnes_grilles+1)*sizeof(int));
+	}
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		for(int j=0;j<colonnes_grilles+1;j++)
+		{
+			grillet1[i][j]=0;
+		}
+	}
+	if(grillet1==NULL)
+	{
+		printf("\nImpossible d'allouer de la mémoire...");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void RemplirGrillet1(void)
+{
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		for(int j=0;j<colonnes_grilles+1;j++)
+		{
+			int nombre_voisin_vivant=ScanCellules(i,j);
+			ReglesConway(nombre_voisin_vivant,i,j);
+		}
+	}
+}
+
+int ScanCellules(int i,int j)
+{
+	int nbr=0;
+	if(i==0)
+	{
+		if(j==0) // I==0 et j==0
+		{
+			if(grille[i][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j]==1)
+			{
+				nbr++;
+			}
+		}
+		if(j==colonnes_grilles) // i==0 et j==colonnes_grilles
+		{
+			if(grille[i][j-1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j-1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j]==1)
+			{
+				nbr++;
+			}
+		}
+		else // uniquement i==0
+		{
+			if(grille[i][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j-1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i][j-1]==1)
+			{
+				nbr++;
+			}
+		}
+	}
+	else if(j==0)
+	{
+		if(i==lignes_grilles) // si j==0 et i==lignes_grilles
+		{
+			if(grille[i-1][j]==1)
+			{
+				nbr++;
+			}
+			if(grille[i-1][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i][j+1]==1)
+			{
+				nbr++;
+			}
+		}
+		else // uniquement si j==0
+		{
+			if(grille[i-1][j]==1)
+			{
+				nbr++;
+			}
+			if(grille[i-1][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i+1][j]==1)
+			{
+				nbr++;
+			}
+		}
+	}
+	else if(i==lignes_grilles)
+	{
+		if(j==colonnes_grilles) // si i==lignes_grilles et j==colonnes_grilles
+		{
+			if(grille[i-1][j]==1)
+			{
+				nbr++;
+			}
+			if(grille[i-1][j-1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i][j-1]==1)
+			{
+				nbr++;
+			}
+		}
+		else
+		{
+			if(grille[i][j-1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i-1][j-1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i-1][j]==1)
+			{
+				nbr++;
+			}
+			if(grille[i-1][j+1]==1)
+			{
+				nbr++;
+			}
+			if(grille[i][j+1]==1)
+			{
+				nbr++;
+			}
+		}
+	}
+	else if(j==colonnes_grilles) // uniquement si j==colonnes_grilles
+	{
+		if(grille[i-1][j]==1)
+		{
+			nbr++;
+		}
+		if(grille[i-1][j-1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i][j-1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i+1][j-1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i+1][j]==1)
+		{
+			nbr++;
+		}
+	}
+	else
+	{
+		if(grille[i-1][j-1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i-1][j]==1)
+		{
+			nbr++;
+		}
+		if(grille[i-1][j+1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i][j-1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i+1][j-1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i+1][j]==1)
+		{
+			nbr++;
+		}
+		if(grille[i+1][j+1]==1)
+		{
+			nbr++;
+		}
+		if(grille[i][j+1]==1)
+		{
+			nbr++;
+		}
+	}
+	return nbr;
+}
+
+void ReglesConway(int nombre_voisin_vivant,int x,int y)
+{
+	if(grille[x][y]==1)
+	{
+		if(nombre_voisin_vivant>=2 && nombre_voisin_vivant<=3)
+		{
+			grillet1[x][y]=1;
+		}
+		else if(nombre_voisin_vivant<2 || nombre_voisin_vivant>3)
+		{
+			grillet1[x][y]=0;
+		}
+	}
+	else if(grille[x][y]==0)
+	{
+		if(nombre_voisin_vivant==3)
+		{
+			grillet1[x][y]=1;
+		}
+		else if(nombre_voisin_vivant!=3)
+		{
+			grillet1[x][y]=0;
+		}
+	}
+}
+
+void AffichageGrillet1(float lignes2,float colonnes2)
+{
+	float ratio = ((float)largeurFenetre()/(float)lignes2);
+	for(int i=0;i<lignes2+1;i++)
+	{
+		for(int j=0;j<colonnes2+1;j++)
+		{
+			if(grillet1[i][j]==1)
+			{
+				couleurCourante(124, 125, 124);
+				rectangle(i*ratio,j*ratio,i*ratio-ratio,j*ratio-ratio);
+			}
+		}
+	}
+}
+
+void PassageTempsSuperieur(void)
+{
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		for(int j=0;j<colonnes_grilles+1;j++)
+		{
+			grille[i][j]=grillet1[i][j];
+		}
 	}
 }
