@@ -23,6 +23,17 @@ int main(int argc, char **argv)
 
 void gestionEvenement(EvenementGfx evenement)
 {
+	abscisse = abscisseSouris();
+	ordonnee = ordonneeSouris();
+	if(temp==limitetemp)
+	{
+		temp=0;
+	}
+	else
+	{
+		temp++;
+	}
+	
 	switch (evenement)
 	{
 		case Initialisation:;
@@ -37,24 +48,23 @@ void gestionEvenement(EvenementGfx evenement)
 			ModifierPositionCurseur();
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
-				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
+				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
 				{
 					SourisCase(lignes2,colonnes2);
 				}
 			}
 			if(etatBoutonSouris() == DroiteAppuye)
 			{
-				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
+				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
 				{
 					RetirerCase(lignes2,colonnes2);
 				}
 				
 			}
-			if(etat==1)
+			if(etat==1 && temp==limitetemp)
 			{
 				RemplirGrillet1();
 				PassageTempsSuperieur();
-	
 			}
 			rafraichisFenetre();
 			break;
@@ -79,6 +89,7 @@ void gestionEvenement(EvenementGfx evenement)
 			AfficheBtnResetHover();
 			AffichePointInterrogation();
 			AffichePointInterrogationHover();
+			AfficheBtnRadio(btnRad);
 			break;
 			
 		case Clavier:
@@ -102,39 +113,66 @@ void gestionEvenement(EvenementGfx evenement)
 		case BoutonSouris:
 			if(etatBoutonSouris() == DroiteAppuye || etatBoutonSouris() == GaucheAppuye)
 			{
-				if(sqrt(pow(largeurFenetre()/4.923-abscisseSouris(),2)+pow(hauteurFenetre()/16.364-ordonneeSouris(),2))<=largeurFenetre()/42.6666)
+				if(sqrt(pow(largeurFenetre()/4.923-abscisse,2)+pow(hauteurFenetre()/16.364-ordonnee,2))<=largeurFenetre()/42.6666)
 				{
 					etat = 1-etat;
 				}
-				else if((abscisseSouris()>=(largeurFenetre()*30/1920)) && (ordonneeSouris()>=(hauteurFenetre()*12/1080)) && (abscisseSouris()<=(largeurFenetre()*180/1920)) && (ordonneeSouris()<=(hauteurFenetre()*120/1080)))
+				else if((abscisse>=(largeurFenetre()*30/1920)) && (ordonnee>=(hauteurFenetre()*12/1080)) && (abscisse<=(largeurFenetre()*180/1920)) && (ordonnee<=(hauteurFenetre()*120/1080)))
 				{
 					menu = 1-menu;
 				}
-				else if(sqrt(pow((largeurFenetre()*260/1920)-abscisseSouris(),2)+pow((hauteurFenetre()*66/1080)-ordonneeSouris(),2))<=45)
+				else if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45)
 				{
 					etat = 0;
 					ResetGrille();
 				}
-				printf("Bouton gauche appuyé en : (%d, %d)\n", abscisseSouris(), ordonneeSouris());
+				else if((abscisse>=largeurFenetre()*566/1920 && abscisse<=largeurFenetre()*686/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
+				{
+					btnRad=1;
+					limitetemp=16;
+					temp=0;
+				}
+				else if((abscisse>=largeurFenetre()*736/1920 && abscisse<=largeurFenetre()*839/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
+				{
+					btnRad=2;
+					limitetemp=8;
+					temp=0;
+				}
+				else if((abscisse>=largeurFenetre()*891/1920 && abscisse<=largeurFenetre()*1011/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
+				{
+					btnRad=3;
+					limitetemp=4;
+					temp=0;
+				}
+				else if((abscisse>=largeurFenetre()*1047/1920 && abscisse<=largeurFenetre()*1158/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
+				{
+					btnRad=4;
+					limitetemp=2;
+					temp=0;
+				}
+				else if((abscisse>=largeurFenetre()*1215/1920 && abscisse<=largeurFenetre()*1341/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
+				{
+					btnRad=5;
+					limitetemp=0;
+					temp=0;
+				}
 			}
 			break;
 		
-		case Souris:
-			break;
+		//case Souris:
+		//	break;
 		
 		case Inactivite:
 			break;
 		
 		case Redimensionnement: 
-			printf("Largeur : %d\t", largeurFenetre());
-			printf("Hauteur : %d\n", hauteurFenetre());
 			break;
 	}
 }
 
 void InitialiserLignesColonnesAffichage(void)
 {
-	lignes2=fabs(((largeurFenetre()*1470/1920)-curseur)/(largeurFenetre()*400/1920))*300;
+	lignes2=fabs(((largeurFenetre()*1470/1920)-curseur)/(largeurFenetre()*400/1920))*lignes_grilles;
 	colonnes2=lignes2;
 }
 
@@ -188,7 +226,7 @@ void AffichageMenu(void)
 
 void AffichageGrille(float ligne2,float colonnes2)
 {
-	couleurCourante(124, 125, 124);
+	couleurCourante(42, 43, 43);
 	float ratio = ((float)largeurFenetre()/(float)ligne2);
 	for(int i=0;i<colonnes2+1;i++)
 	{
@@ -203,8 +241,8 @@ void AffichageGrille(float ligne2,float colonnes2)
 void SourisCase(float lignes2,float colonnes2)
 {
 	float ratio = ((float)largeurFenetre()/(float)lignes2);
-	float x = abscisseSouris();
-	float y = ordonneeSouris();
+	float x = abscisse;
+	float y = ordonnee;
 	int ligneX=0;
 	int colonneY=0;
 	for(int i=0;i<lignes2+2;i++)
@@ -277,11 +315,11 @@ void ModifierPositionCurseur(void)
 {
 	if (etatBoutonSouris() == GaucheAppuye || etatBoutonSouris() == DroiteAppuye)
 	{
-		if(abscisseSouris()>=largeurFenetre()*1470/1920 && abscisseSouris()<=largeurFenetre()*1870/1920)
+		if(abscisse>=largeurFenetre()*1470/1920 && abscisse<=largeurFenetre()*1870/1920)
 		{
-			if(ordonneeSouris()>=hauteurFenetre()*10/1080 && ordonneeSouris()<=hauteurFenetre()*110/1080)
+			if(ordonnee>=hauteurFenetre()*10/1080 && ordonnee<=hauteurFenetre()*110/1080)
 			{
-				float point = (4/3)*(abscisseSouris()-(largeurFenetre()*1470/1920));
+				float point = (4/3)*(abscisse-(largeurFenetre()*1470/1920));
 				curseur = (largeurFenetre()*1470/1920)+point;
 			}
 		}
@@ -291,8 +329,8 @@ void ModifierPositionCurseur(void)
 void RetirerCase(float lignes2,float colonnes2)
 {
 	float ratio = ((float)largeurFenetre()/(float)lignes2);
-	float x = abscisseSouris();
-	float y = ordonneeSouris();
+	float x = abscisse;
+	float y = ordonnee;
 	int ligneX=0;
 	int colonneY=0;
 	for(int i=0;i<lignes2+2;i++)
@@ -702,13 +740,14 @@ void ResetGrille(void)
 		for(int j=0;j<colonnes_grilles;j++)
 		{
 			grille[i][j]=0;
+			grillet1[i][j]=0;
 		}
 	}
 }
 
 void AfficheBtnLectureHover(void)
 {
-	if(sqrt(pow(largeurFenetre()/4.923-abscisseSouris(),2)+pow(hauteurFenetre()/16.364-ordonneeSouris(),2))<=largeurFenetre()/42.6666)
+	if(sqrt(pow(largeurFenetre()/4.923-abscisse,2)+pow(hauteurFenetre()/16.364-ordonnee,2))<=largeurFenetre()/42.6666)
 	{
 		couleurCourante(0,0,0); 
 		cercle(largeurFenetre()*390/1920,hauteurFenetre()*66/1080,45); // Cercle Pause
@@ -729,7 +768,7 @@ void AfficheBtnLectureHover(void)
 
 void AfficheBtnResetHover(void)
 {
-	if(sqrt(pow((largeurFenetre()*260/1920)-abscisseSouris(),2)+pow((hauteurFenetre()*66/1080)-ordonneeSouris(),2))<=45)
+	if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45)
 	{
 		couleurCourante(0,0,0); 
 		cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,45); // Cercle Pause
@@ -748,7 +787,7 @@ void AfficheBtnResetHover(void)
 
 void AffichePointInterrogationHover(void)
 {
-	if((abscisseSouris()>=(largeurFenetre()*30/1920)) && (ordonneeSouris()>=(hauteurFenetre()*12/1080)) && (abscisseSouris()<=(largeurFenetre()*180/1920)) && (ordonneeSouris()<=(hauteurFenetre()*120/1080)))
+	if((abscisse>=(largeurFenetre()*30/1920)) && (ordonnee>=(hauteurFenetre()*12/1080)) && (abscisse<=(largeurFenetre()*180/1920)) && (ordonnee<=(hauteurFenetre()*120/1080)))
 	{
 		if(menu == 0)
 		{ // Menu désactivé
@@ -767,4 +806,43 @@ void AffichePointInterrogationHover(void)
 		rectangle(largeurFenetre()*70/1920,hauteurFenetre()*85/1080,largeurFenetre()*85/1920,hauteurFenetre()*95/1080); // Partie de droite
 	}
 	
+}
+
+void AfficheBtnRadio(int btnRad){
+	couleurCourante(255, 255, 255);
+	cercle((largeurFenetre()*0.324), (hauteurFenetre()*0.03), 10);
+	cercle((largeurFenetre()*0.408), (hauteurFenetre()*0.03), 10);
+	cercle((largeurFenetre()*0.492), (hauteurFenetre()*0.03), 10);
+	cercle((largeurFenetre()*0.576), (hauteurFenetre()*0.03), 10);
+	cercle((largeurFenetre()*0.66), (hauteurFenetre()*0.03), 10);
+	afficheChaine("x0.5", 50, largeurFenetre()*0.30, hauteurFenetre()*0.06);
+	afficheChaine("x1", 50, largeurFenetre()*0.40, hauteurFenetre()*0.06);
+	afficheChaine("x2", 50, largeurFenetre()*0.48, hauteurFenetre()*0.06);
+	afficheChaine("x4", 50, largeurFenetre()*0.56, hauteurFenetre()*0.06);
+	afficheChaine("x8", 50, largeurFenetre()*0.65, hauteurFenetre()*0.06);
+	//
+	couleurCourante(255,0,0);
+	
+	//
+	couleurCourante(0, 0, 0);
+	if(btnRad==1){
+		couleurCourante(255, 0, 0);
+		cercle((largeurFenetre()*0.324), (hauteurFenetre()*0.03), 10);
+	}
+	else if(btnRad==2){
+		couleurCourante(255, 0, 0);
+		cercle((largeurFenetre()*0.408), (hauteurFenetre()*0.03), 10);
+	}
+	else if(btnRad==3){
+		couleurCourante(255, 0, 0);
+		cercle((largeurFenetre()*0.492), (hauteurFenetre()*0.03), 10);
+	}
+	else if(btnRad==4){
+		couleurCourante(255, 0, 0);
+		cercle((largeurFenetre()*0.576), (hauteurFenetre()*0.03), 10);
+	}
+	else if(btnRad==5){
+		couleurCourante(255, 0, 0);
+		cercle((largeurFenetre()*0.66), (hauteurFenetre()*0.03), 10);
+	}
 }

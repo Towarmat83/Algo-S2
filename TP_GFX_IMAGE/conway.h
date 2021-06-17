@@ -3,8 +3,8 @@
 #define CONWAY
 
 int **grille=NULL;
-int lignes_grilles=300; // MAX=300
-int colonnes_grilles=300; // MAX=300
+int lignes_grilles=500; // MAX=500
+int colonnes_grilles=500; // MAX=500
 float curseur;
 float lignes2=10;
 float colonnes2=10;
@@ -12,6 +12,11 @@ float boutonabscisse;
 int etat = 0;
 int **grillet1=NULL;
 int menu = 0;
+int btnRad=3;
+int limitetemp=4;
+int temp=0;
+int ordonnee;
+int abscisse;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -38,5 +43,6 @@ void ResetGrille(void);
 void AfficheBtnLectureHover(void);
 void AfficheBtnResetHover(void);
 void AffichePointInterrogationHover(void);
+void AfficheBtnRadio(int btnRad);
 
 #endif
