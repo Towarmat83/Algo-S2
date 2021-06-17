@@ -159,8 +159,8 @@ void gestionEvenement(EvenementGfx evenement)
 			}
 			break;
 		
-		//case Souris:
-		//	break;
+		case Souris:
+			break;
 		
 		case Inactivite:
 			break;
