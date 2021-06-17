@@ -11,6 +11,7 @@ float colonnes2=10;
 float boutonabscisse;
 int etat = 0;
 int **grillet1=NULL;
+int menu = 0;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -32,5 +33,6 @@ void PassageTempsSuperieur(void);
 void AfficheBtnReset(void);
 void InitialiserVariablesGlobales(void);
 void InitialiserLignesColonnesAffichage(void);
+void AffichePointInterrogation(void);
 
 #endif

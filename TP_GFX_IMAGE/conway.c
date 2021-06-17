@@ -37,14 +37,14 @@ void gestionEvenement(EvenementGfx evenement)
 			ModifierPositionCurseur();
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
-				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
+				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
 				{
 					SourisCase(lignes2,colonnes2);
 				}
 			}
 			if(etatBoutonSouris() == DroiteAppuye)
 			{
-				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0)
+				if(ordonneeSouris()>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
 				{
 					RetirerCase(lignes2,colonnes2);
 				}
@@ -75,6 +75,7 @@ void gestionEvenement(EvenementGfx evenement)
 			SliderZoom(); 
 			AfficheBtnLecture();
 			AfficheBtnReset();
+			AffichePointInterrogation();
 			break;
 			
 		case Clavier:
@@ -102,6 +103,11 @@ void gestionEvenement(EvenementGfx evenement)
 				{
 					etat = 1-etat;
 				}
+				else if((abscisseSouris()>=(largeurFenetre()*30/1920)) && (ordonneeSouris()>=(hauteurFenetre()*12/1080)) && (abscisseSouris()<=(largeurFenetre()*180/1920)) && (ordonneeSouris()<=(hauteurFenetre()*120/1080)))
+				{
+					menu = 1-menu;
+				}
+				printf("Bouton gauche appuyé en : (%d, %d)\n", abscisseSouris(), ordonneeSouris());
 			}
 			break;
 		
@@ -121,7 +127,7 @@ void gestionEvenement(EvenementGfx evenement)
 void InitialiserLignesColonnesAffichage(void)
 {
 	//lignes2=fabs((largeurFenetre()/1.3061-curseur)/(largeurFenetre()/4.8))*(largeurFenetre()/6.4);
-	lignes2=fabs((1470-curseur)/400)*300;
+	lignes2=fabs(((largeurFenetre()*1470/1920)-curseur)/(largeurFenetre()*400/1920))*300;
 	colonnes2=lignes2;
 }
 
@@ -129,8 +135,8 @@ void InitialiserVariablesGlobales(void)
 {
 	//curseur=largeurFenetre()*1.328;
 	//boutonabscisse=largeurFenetre()*1.935;
-	curseur=1550;
-	boutonabscisse=992;
+	curseur=largeurFenetre()*1550/1920;
+	boutonabscisse=largeurFenetre()*992/1920;
 }
 
 void InitialisationGrille()
@@ -166,12 +172,13 @@ void LibererMemoireGrille(void)
 void AffichageMenu(void)
 {
 	couleurCourante(0,255,0);
-	ligne(0,hauteurFenetre()*0.12,largeurFenetre(),hauteurFenetre()*0.12);
+	ligne(0,hauteurFenetre()*129.6/1080,largeurFenetre(),hauteurFenetre()*129.6/1080);
 	couleurCourante(0,0,0);
-	rectangle(0,hauteurFenetre()*0.12,largeurFenetre(),0);
+	rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
 	couleurCourante(0,255,0);
-	ligne(largeurFenetre()/1.352,0,largeurFenetre()/1.352,hauteurFenetre()*0.12);
-	ligne(hauteurFenetre()/2.3478,0,hauteurFenetre()/2.3478,hauteurFenetre()*0.12);
+	ligne(largeurFenetre()*1420/1920,0,largeurFenetre()*1420/1920,hauteurFenetre()*129.6/1080);
+	ligne(largeurFenetre()*460/1920,0,largeurFenetre()*460/1920,hauteurFenetre()*129.6/1080);
+	couleurCourante(155,255,0);
 }
 
 void AffichageGrille(float ligne2,float colonnes2)
@@ -239,11 +246,10 @@ void SliderZoom()
 	ligne(largeurFenetre()/1.3521+50,hauteurFenetre()/27,largeurFenetre()/1.3521+50,hauteurFenetre()/13.5);
 	ligne(largeurFenetre()/1.0267,hauteurFenetre()/13.5,largeurFenetre()/1.0267,hauteurFenetre()/27);
 	epaisseurDeTrait(1);
-	afficheChaine("ZOOM", largeurFenetre()/48, largeurFenetre()/1.1925, hauteurFenetre()/13);
 	afficheChaine("0",largeurFenetre()/76.8,largeurFenetre()/1.3132,hauteurFenetre()/12);
 	afficheChaine("300",largeurFenetre()/76.8,largeurFenetre()/1.0406,hauteurFenetre()/12);
 	couleurCourante(0,145,255);
-	cercle(curseur,largeurFenetre()/32,hauteurFenetre()/108);
+	cercle(curseur,hauteurFenetre()*60/1080,10);
 }
 
 void cercle(float centreX, float centreY, float rayon)
@@ -266,12 +272,12 @@ void ModifierPositionCurseur(void)
 {
 	if (etatBoutonSouris() == GaucheAppuye || etatBoutonSouris() == DroiteAppuye)
 	{
-		if(abscisseSouris()>=largeurFenetre()/1.3061 && abscisseSouris()<=largeurFenetre()/1.0267)
+		if(abscisseSouris()>=largeurFenetre()*1470/1920 && abscisseSouris()<=largeurFenetre()*1870/1920)
 		{
-			if(ordonneeSouris()>=hauteurFenetre()/108 && ordonneeSouris()<=hauteurFenetre()/9.8181)
+			if(ordonneeSouris()>=hauteurFenetre()*10/1080 && ordonneeSouris()<=hauteurFenetre()*110/1080)
 			{
-				float point = (4/3)*(abscisseSouris()-(largeurFenetre()/1.3061));
-				curseur = largeurFenetre()/1.3061+point;
+				float point = (4/3)*(abscisseSouris()-(largeurFenetre()*1470/1920));
+				curseur = (largeurFenetre()*1470/1920)+point;
 			}
 		}
 	}
@@ -309,17 +315,17 @@ void RetirerCase(float lignes2,float colonnes2)
 void AfficheBtnLecture(void)
 {
 	couleurCourante(255,255,255); 
-	cercle(largeurFenetre()/4.923,hauteurFenetre()/16.3636,largeurFenetre()/42.6666); // Cercle Pause
+	cercle(largeurFenetre()*390/1920,hauteurFenetre()*66/1080,45); // Cercle Pause
 	couleurCourante(0,0,0);
-	cercle(largeurFenetre()/4.923,hauteurFenetre()/16.3636,largeurFenetre()/45.71428); // Cercle intérieur noir
+	cercle(largeurFenetre()*390/1920,hauteurFenetre()*66/1080,42); // Cercle intérieur noir
 	couleurCourante(255,255,255);
 	
 	if(etat == 1){ // Bouton Pause
-		rectangle(largeurFenetre()/5.18918,hauteurFenetre()/12.70588,largeurFenetre()/4.9870,hauteurFenetre()/22.9787); // rectangle gauche
-		rectangle(largeurFenetre()/4.8607,hauteurFenetre()/12.70588,largeurFenetre()/4.6829,hauteurFenetre()/22.9787); // rectangle droit
+		rectangle(largeurFenetre()*370/1920,hauteurFenetre()*85/1080,largeurFenetre()*385/1920,hauteurFenetre()*47/1080); // rectangle gauche
+		rectangle(largeurFenetre()*395/1920,hauteurFenetre()*85/1080,largeurFenetre()*410/1920,hauteurFenetre()*47/1080); // rectangle droit
 	}
 	else if(etat == 0){ // Bouton Reprendre 
-		triangle(largeurFenetre()/5.10638,hauteurFenetre()/23.47826,largeurFenetre()/5.10638,hauteurFenetre()/13.012,largeurFenetre()/4.6829,hauteurFenetre()/16.875);
+		triangle(largeurFenetre()*376/1920,hauteurFenetre()*46/1080,largeurFenetre()*376/1920,hauteurFenetre()*83/1080,largeurFenetre()*410/1920,hauteurFenetre()*64/1080);
 	}
 }
 
@@ -620,8 +626,66 @@ void AfficheBtnReset(void){
 	couleurCourante(0,0,0);
 	cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,22);
 	couleurCourante(0,0,0);
-	rectangle(262,90,288,63);
+	rectangle(largeurFenetre()*262/1920,hauteurFenetre()*90/1080,largeurFenetre()*288/1920,hauteurFenetre()*63/1080);
 	couleurCourante(255,255,255);
 	triangle(largeurFenetre()*260/1920,hauteurFenetre()*81.5/1080,largeurFenetre()*260/1920,hauteurFenetre()*95.5/1080,largeurFenetre()*270/1920,hauteurFenetre()*88.5/1080);
 }
 
+void AffichePointInterrogation(void)
+{
+	if(menu == 1){ // Menu activé
+		couleurCourante(255,255,0);
+		rectangle(largeurFenetre()*30/1920,hauteurFenetre()*10/1080,largeurFenetre()*180/1920,hauteurFenetre()*120/1080);
+		couleurCourante(0,0,0);
+		rectangle(largeurFenetre()*32/1920,hauteurFenetre()*12/1080,largeurFenetre()*178/1920,hauteurFenetre()*118/1080);
+		// Affichage menu
+		couleurCourante(255,0,0);
+		rectangle(largeurFenetre()*94/1920,hauteurFenetre()*158/1080,largeurFenetre()*1826/1920,hauteurFenetre()*1056/1080);
+		couleurCourante(0,0,0);
+		rectangle(largeurFenetre()*96/1920,hauteurFenetre()*160/1080,largeurFenetre()*1824/1920,hauteurFenetre()*1054/1080);
+		
+		//flèches de gauche à droite
+		couleurCourante(255,255,255);
+		rectangle(largeurFenetre()*255/1920,hauteurFenetre()*200/1080,largeurFenetre()*265/1920,hauteurFenetre()*750/1080);
+		triangle(largeurFenetre()*250/1920,hauteurFenetre()*200/1080,largeurFenetre()*270/1920,hauteurFenetre()*200/1080,largeurFenetre()*260/1920,hauteurFenetre()*170/1080);
+		epaisseurDeTrait(10);
+		ligne(largeurFenetre()*258/1920,hauteurFenetre()*749/1080,largeurFenetre()*350/1920,hauteurFenetre()*800/1080);
+		rectangle(largeurFenetre()*349/1920,hauteurFenetre()*796/1080,largeurFenetre()*370/1920,hauteurFenetre()*805/1080);
+		epaisseurDeTrait(2);
+		
+		rectangle(largeurFenetre()*385/1920,hauteurFenetre()*200/1080,largeurFenetre()*395/1920,hauteurFenetre()*600/1080);
+		triangle(largeurFenetre()*380/1920,hauteurFenetre()*200/1080,largeurFenetre()*400/1920,hauteurFenetre()*200/1080,largeurFenetre()*390/1920,hauteurFenetre()*170/1080);
+		epaisseurDeTrait(10);
+		ligne(largeurFenetre()*388/1920,hauteurFenetre()*599/1080,largeurFenetre()*480/1920,hauteurFenetre()*650/1080);
+		rectangle(largeurFenetre()*479/1920,hauteurFenetre()*646/1080,largeurFenetre()*490/1920,hauteurFenetre()*655/1080);
+		epaisseurDeTrait(2);
+		
+		rectangle(largeurFenetre()*1660/1920,hauteurFenetre()*200/1080,largeurFenetre()*1670/1920,hauteurFenetre()*240/1080);
+		triangle(largeurFenetre()*1655/1920,hauteurFenetre()*200/1080,largeurFenetre()*1675/1920,hauteurFenetre()*200/1080,largeurFenetre()*1665/1920,hauteurFenetre()*170/1080);
+		epaisseurDeTrait(2);
+		afficheChaine("Informations sur le menu",60,largeurFenetre()*556/1920,hauteurFenetre()*985/1080);
+		afficheChaine("Bouton pour reset la grille",40,largeurFenetre()*390/1920,hauteurFenetre()*796/1080);
+		afficheChaine("Bouton Marche/Pause",40,largeurFenetre()*510/1920,hauteurFenetre()*646/1080);
+		afficheChaine("ZOOM", 40, largeurFenetre()*1610/1920, hauteurFenetre()*255/1080);
+		couleurCourante(255,0,0);
+		ligne(largeurFenetre()*550/1920,hauteurFenetre()*970/1080,largeurFenetre()*1380/1920,hauteurFenetre()*970/1080);
+		ligne(largeurFenetre()*550/1920,hauteurFenetre()*970/1080,largeurFenetre()*550/1920,hauteurFenetre()*1054/1080);
+		ligne(largeurFenetre()*1380/1920,hauteurFenetre()*970/1080,largeurFenetre()*1380/1920,hauteurFenetre()*1054/1080);
+		// Point d'intérrogation
+		couleurCourante(255,0,0);
+	}
+	else if(menu == 0){ // Menu désactivé
+		couleurCourante(255,255,255);
+		rectangle(largeurFenetre()*30/1920,hauteurFenetre()*10/1080,largeurFenetre()*180/1920,hauteurFenetre()*120/1080);
+		couleurCourante(0,0,0);
+		rectangle(largeurFenetre()*32/1920,hauteurFenetre()*12/1080,largeurFenetre()*178/1920,hauteurFenetre()*118/1080);
+		// Point d'intérrogation
+		couleurCourante(255,255,255);
+	}
+	rectangle(largeurFenetre()*95/1920,hauteurFenetre()*25/1080,largeurFenetre()*110/1920,hauteurFenetre()*35/1080); // Point du bas
+	rectangle(largeurFenetre()*95/1920,hauteurFenetre()*45/1080,largeurFenetre()*110/1920,hauteurFenetre()*65/1080); // Corps
+	rectangle(largeurFenetre()*110/1920,hauteurFenetre()*65/1080,largeurFenetre()*125/1920,hauteurFenetre()*75/1080); // Partie de droite
+	rectangle(largeurFenetre()*125/1920,hauteurFenetre()*75/1080,largeurFenetre()*140/1920,hauteurFenetre()*95/1080); 
+	rectangle(largeurFenetre()*85/1920,hauteurFenetre()*95/1080,largeurFenetre()*125/1920,hauteurFenetre()*105/1080); // Partie du haut
+	rectangle(largeurFenetre()*70/1920,hauteurFenetre()*85/1080,largeurFenetre()*85/1920,hauteurFenetre()*95/1080); // Partie de droite
+}
