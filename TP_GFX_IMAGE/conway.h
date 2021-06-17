@@ -34,5 +34,9 @@ void AfficheBtnReset(void);
 void InitialiserVariablesGlobales(void);
 void InitialiserLignesColonnesAffichage(void);
 void AffichePointInterrogation(void);
+void ResetGrille(void);
+void AfficheBtnLectureHover(void);
+void AfficheBtnResetHover(void);
+void AffichePointInterrogationHover(void);
 
 #endif
