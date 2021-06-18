@@ -17,6 +17,9 @@ int limitetemp=4;
 int temp=0;
 int ordonnee;
 int abscisse;
+int boutong=1;
+int boutond=1;
+int pagemenu=1;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -44,5 +47,7 @@ void AfficheBtnLectureHover(void);
 void AfficheBtnResetHover(void);
 void AffichePointInterrogationHover(void);
 void AfficheBtnRadio(int btnRad);
+void boutongauche(int boutond);
+void boutondroite(int boutond);
 
 #endif
