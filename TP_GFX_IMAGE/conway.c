@@ -44,6 +44,7 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 		
 		case Temporisation:
+			ModifierPositionCurseur();
 			InitialiserLignesColonnesAffichage();
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
@@ -69,7 +70,6 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 			
 		case Affichage:
-			effaceFenetre(0,0,0);
 			couleurCourante(124, 125, 124);
 			epaisseurDeTrait(1);
 			AffichageGrille(lignes2,colonnes2);
@@ -80,8 +80,7 @@ void gestionEvenement(EvenementGfx evenement)
 			}
 			epaisseurDeTrait(3);
 			AffichageMenu();
-			couleurCourante(255,255,255);
-			AfficheBtnZoom(etatBtnZ);
+			couleurCourante(255,255,255); 
 			AfficheBtnLecture();
 			AfficheBtnReset();
 			AfficheBtnLectureHover();
@@ -89,19 +88,32 @@ void gestionEvenement(EvenementGfx evenement)
 			AffichePointInterrogation();
 			AffichePointInterrogationHover();
 			AfficheBtnRadio(btnRad);
+			AfficheBtnZoom();
 			break;
 			
 		case Clavier:
 			switch (caractereClavier())
 			{
-				case 'Q': 
-				case 'q':
+				case 'T': 
+				case 't':
 					termineBoucleEvenements();
 					break;
 
 				case 'F':
 				case 'f':
 					modePleinEcran();	
+					break;
+				case 'd':
+					deplacementX-=2;
+					break;
+				case 'q':
+					deplacementX+=2;
+					break;
+				case 'z':
+					deplacementY-=2;
+					break;
+				case 's':
+					deplacementY+=2;
 					break;
 			}
 			break;
@@ -191,6 +203,9 @@ void gestionEvenement(EvenementGfx evenement)
 					Zoom(&lignes_grilles, &colonnes_grilles);
 					etatBtnZ=1;
 				}
+				if(etatBoutonSouris() == DroiteRelache || etatBoutonSouris() == GaucheRelache){
+					etatBtnZ=0;
+				}
 			}
 			if(etatBoutonSouris() == DroiteRelache || etatBoutonSouris() == GaucheRelache){
 				etatBtnZ=0;
@@ -210,14 +225,12 @@ void gestionEvenement(EvenementGfx evenement)
 
 void InitialiserLignesColonnesAffichage(void)
 {
-	lignes2=fabs(((largeurFenetre()*1470/1920)-curseur)/(largeurFenetre()*400/1920))*lignes_grilles;
-	colonnes2=lignes2;
+	ratio = ((float)largeurFenetre()/(float)lignes2);
 }
 
 void InitialiserVariablesGlobales(void)
 {
 	curseur=largeurFenetre()*1550/1920;
-	boutonabscisse=largeurFenetre()*992/1920;
 }
 
 void InitialisationGrille()
@@ -234,6 +247,24 @@ void InitialisationGrille()
 			grille[i][j]=0;
 		}
 	}
+	for(int j=0;j<colonnes_grilles+1;j++)
+	{
+		grille[0][j]=2;
+	}
+	for(int j=0;j<colonnes_grilles+1;j++)
+	{
+		grille[lignes_grilles][j]=2;
+	}
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		grille[i][0]=2;
+	}
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		grille[i][colonnes_grilles]=2;
+	}
+
+
 	if(grille==NULL)
 	{
 		printf("\nImpossible d'allouer de la mémoire...");
@@ -265,35 +296,33 @@ void AffichageMenu(void)
 void AffichageGrille(float ligne2,float colonnes2)
 {
 	couleurCourante(42, 43, 43);
-	float ratio = ((float)largeurFenetre()/(float)ligne2);
 	for(int i=0;i<colonnes2+1;i++)
 	{
-		ligne(ratio*i,0,ratio*i,hauteurFenetre());
+		ligne(ratio*(i),0,ratio*(i),hauteurFenetre());
 	}
 	for(int j=0;j<colonnes2+1;j++)
 	{
-		ligne(0,ratio*j,largeurFenetre(),ratio*j);
+		ligne(0,ratio*(j),largeurFenetre(),ratio*(j));
 	}
 }
 
 void SourisCase(float lignes2,float colonnes2)
 {
-	float ratio = ((float)largeurFenetre()/(float)lignes2);
 	float x = abscisse;
 	float y = ordonnee;
 	int ligneX=0;
 	int colonneY=0;
-	for(int i=0;i<lignes2+2;i++)
+	for(int i=1;i<lignes2-1;i++)
 	{
-		if(ratio*i>x)
+		if(ratio*(i+deplacementX)>x)
 		{
 			ligneX=i;
 			break;
 		}
 	}
-	for(int j=0;j<colonnes2+2;j++)
+	for(int j=1;j<colonnes2;j++)
 	{
-		if(ratio*j>y)
+		if(ratio*(j+deplacementY)>y)
 		{
 			colonneY=j;
 			break;
@@ -305,7 +334,6 @@ void SourisCase(float lignes2,float colonnes2)
 
 void AffichageMatrice(float lignes2,float colonnes2)
 {
-	float ratio = ((float)largeurFenetre()/(float)lignes2);
 	for(int i=0;i<lignes2+1;i++)
 	{
 		for(int j=0;j<colonnes2+1;j++)
@@ -313,36 +341,70 @@ void AffichageMatrice(float lignes2,float colonnes2)
 			if(grille[i][j]==1)
 			{
 				couleurCourante(255,169,0);
-				rectangle(i*ratio,j*ratio,i*ratio-ratio,j*ratio-ratio);
+				rectangle((i+deplacementX)*ratio,(j+deplacementY)*ratio,(i+deplacementX)*ratio-ratio,(j+deplacementY)*ratio-ratio);
 			}
 		}
 	}
 }
 
-void AfficheBtnZoom(int etatBtnZ){
+void cercle(float centreX, float centreY, float rayon)
+{
+	const int Pas = 100;
+	const double PasAngulaire = 2.*M_PI/Pas;
+	int index;
+	
+	for (index = 0; index < Pas; ++index)
+	{
+		const double angle = 2.*M_PI*index/Pas; 
+		triangle(centreX, centreY,
+				 centreX+rayon*cos(angle), centreY+rayon*sin(angle),
+				 centreX+rayon*cos(angle+PasAngulaire), centreY+rayon*sin(angle+PasAngulaire));
+	}
+	
+}
 
+void ModifierPositionCurseur(void)
+{
+	if (etatBoutonSouris() == GaucheAppuye || etatBoutonSouris() == DroiteAppuye)
+	{
+		if(abscisse>=largeurFenetre()*1468/1920 && abscisse<=largeurFenetre()*1647/1920)
+		{
+			if(ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080)
+			{
+				if(lignes2>5)
+				{
+					lignes2-=2;
+					colonnes2-=2;
+				}
+			}
+		}
+		else if(abscisse>=largeurFenetre()*1693/1920 && abscisse<=largeurFenetre()*1872/1920)
+		{
+			if(ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080)
+			{
+				if(lignes2<lignes_grilles)
+				{
+					lignes2+=2;
+					colonnes2+=2;
+				}
+			}
+		}
+
+	}
+}
+void AfficheBtnZoom(void)
+{
     couleurCourante(255,255,255);
-
     rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
-
     couleurCourante(0,0,0);
-    
     rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
-
     couleurCourante(255,255,255);
-
     rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
-
     couleurCourante(0,0,0);
-
     rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
-
     couleurCourante(255,255,255);
-
     epaisseurDeTrait(5);
-
     afficheChaine("+",60,largeurFenetre()*1535/1920,hauteurFenetre()*40/1080);
-
     afficheChaine("-",60,largeurFenetre()*1760/1920,hauteurFenetre()*40/1080);
     if(etatBtnZ==1){
 
@@ -376,48 +438,18 @@ void AfficheBtnZoom(int etatBtnZ){
 
     afficheChaine("-",60,largeurFenetre()*1760/1920,hauteurFenetre()*40/1080);
     }
-}
 
-void Dezoom(int *lignes, int *colonnes){
-	if(*lignes<=491){
-		*lignes=*lignes+10;
-		*colonnes=*colonnes+10;
-	}
-}
-
-void Zoom(int *lignes, int *colonnes){
-	if(*lignes>=11){
-		*lignes=*lignes-10;
-		*colonnes=*colonnes-10;
-	}
-}
-
-void cercle(float centreX, float centreY, float rayon)
-{
-	const int Pas = 100;
-	const double PasAngulaire = 2.*M_PI/Pas;
-	int index;
-	
-	for (index = 0; index < Pas; ++index)
-	{
-		const double angle = 2.*M_PI*index/Pas; 
-		triangle(centreX, centreY,
-				 centreX+rayon*cos(angle), centreY+rayon*sin(angle),
-				 centreX+rayon*cos(angle+PasAngulaire), centreY+rayon*sin(angle+PasAngulaire));
-	}
-	
 }
 
 void RetirerCase(float lignes2,float colonnes2)
 {
-	float ratio = ((float)largeurFenetre()/(float)lignes2);
 	float x = abscisse;
 	float y = ordonnee;
 	int ligneX=0;
 	int colonneY=0;
 	for(int i=0;i<lignes2+2;i++)
 	{
-		if(ratio*i>x)
+		if(ratio*(i+deplacementX)>x)
 		{
 			ligneX=i;
 			break;
@@ -425,7 +457,7 @@ void RetirerCase(float lignes2,float colonnes2)
 	}
 	for(int j=0;j<colonnes2+2;j++)
 	{
-		if(ratio*j>y)
+		if(ratio*(j+deplacementY)>y)
 		{
 			colonneY=j;
 			break;
@@ -725,7 +757,7 @@ void AffichageGrillet1(float lignes2,float colonnes2)
 			if(grillet1[i][j]==1)
 			{
 				couleurCourante(0,145,255);
-				rectangle(i*ratio,j*ratio,i*ratio-ratio,j*ratio-ratio);
+				rectangle((i+deplacementX)*ratio,(j+deplacementY)*ratio,(i+deplacementX)*ratio-ratio,(j+deplacementY)*ratio-ratio);
 			}
 		}
 	}
@@ -1031,5 +1063,19 @@ void boutondroite(int boutond)
 		triangle(largeurFenetre()/16*15-15,hauteurFenetre()/32*16, largeurFenetre()/16*15-55,hauteurFenetre()/32*17, largeurFenetre()/16*15-55,hauteurFenetre()/32*15);
 		couleurCourante(109,7,26);
 		triangle(largeurFenetre()/16*15-35,hauteurFenetre()/32*16, largeurFenetre()/16*15-65,hauteurFenetre()/32*17, largeurFenetre()/16*15-65,hauteurFenetre()/32*15);
+	}
+}
+
+void Dezoom(int *lignes, int *colonnes){
+	if(*lignes<=491){
+		*lignes=*lignes+10;
+		*colonnes=*colonnes+10;
+	}
+}
+
+void Zoom(int *lignes, int *colonnes){
+	if(*lignes>=11){
+		*lignes=*lignes-10;
+		*colonnes=*colonnes-10;
 	}
 }
