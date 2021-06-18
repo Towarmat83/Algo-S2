@@ -45,7 +45,6 @@ void gestionEvenement(EvenementGfx evenement)
 		
 		case Temporisation:
 			InitialiserLignesColonnesAffichage();
-			ModifierPositionCurseur();
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
 				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
@@ -82,7 +81,7 @@ void gestionEvenement(EvenementGfx evenement)
 			epaisseurDeTrait(3);
 			AffichageMenu();
 			couleurCourante(255,255,255);
-			SliderZoom(); 
+			AfficheBtnZoom(etatBtnZ);
 			AfficheBtnLecture();
 			AfficheBtnReset();
 			AfficheBtnLectureHover();
@@ -184,6 +183,17 @@ void gestionEvenement(EvenementGfx evenement)
 				{
 					pagemenu=1;
 				}
+				if(abscisse>=largeurFenetre()*1693/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1872/1920 && ordonnee<=hauteurFenetre()*122/1080){
+					Dezoom(&lignes_grilles, &colonnes_grilles);
+					etatBtnZ=2;
+				}
+				if(abscisse>=largeurFenetre()*1468/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1647/1920 && ordonnee<=hauteurFenetre()*122/1080){
+					Zoom(&lignes_grilles, &colonnes_grilles);
+					etatBtnZ=1;
+				}
+			}
+			if(etatBoutonSouris() == DroiteRelache || etatBoutonSouris() == GaucheRelache){
+				etatBtnZ=0;
 			}
 			break;
 		
@@ -309,18 +319,77 @@ void AffichageMatrice(float lignes2,float colonnes2)
 	}
 }
 
-void SliderZoom() 
-{
-	couleurCourante(255,255,255);
-	epaisseurDeTrait(4);
-	ligne(largeurFenetre()/1.3521+50,hauteurFenetre()/18,largeurFenetre()/1.0267,hauteurFenetre()/18); //400 unités
-	ligne(largeurFenetre()/1.3521+50,hauteurFenetre()/27,largeurFenetre()/1.3521+50,hauteurFenetre()/13.5);
-	ligne(largeurFenetre()/1.0267,hauteurFenetre()/13.5,largeurFenetre()/1.0267,hauteurFenetre()/27);
-	epaisseurDeTrait(1);
-	afficheChaine("0",largeurFenetre()/76.8,largeurFenetre()/1.3132,hauteurFenetre()/12);
-	afficheChaine("300",largeurFenetre()/76.8,largeurFenetre()/1.0406,hauteurFenetre()/12);
-	couleurCourante(0,145,255);
-	cercle(curseur,hauteurFenetre()*60/1080,10);
+void AfficheBtnZoom(int etatBtnZ){
+
+    couleurCourante(255,255,255);
+
+    rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
+
+    couleurCourante(0,0,0);
+    
+    rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
+
+    couleurCourante(255,255,255);
+
+    rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
+
+    couleurCourante(0,0,0);
+
+    rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
+
+    couleurCourante(255,255,255);
+
+    epaisseurDeTrait(5);
+
+    afficheChaine("+",60,largeurFenetre()*1535/1920,hauteurFenetre()*40/1080);
+
+    afficheChaine("-",60,largeurFenetre()*1760/1920,hauteurFenetre()*40/1080);
+    if(etatBtnZ==1){
+
+    couleurCourante(0 ,0 ,0);
+
+    rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
+
+    couleurCourante(255,255,255);
+    
+    rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
+
+    couleurCourante(0 ,0 ,0);
+
+    epaisseurDeTrait(5);
+
+    afficheChaine("+",60,largeurFenetre()*1535/1920,hauteurFenetre()*40/1080);
+    }
+    else if(etatBtnZ==2){
+
+    couleurCourante(0 ,0 ,0);
+
+    rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
+
+    couleurCourante(255,255,255);
+
+    rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
+
+    couleurCourante(0 ,0 ,0);
+
+    epaisseurDeTrait(5);
+
+    afficheChaine("-",60,largeurFenetre()*1760/1920,hauteurFenetre()*40/1080);
+    }
+}
+
+void Dezoom(int *lignes, int *colonnes){
+	if(*lignes<=491){
+		*lignes=*lignes+10;
+		*colonnes=*colonnes+10;
+	}
+}
+
+void Zoom(int *lignes, int *colonnes){
+	if(*lignes>=11){
+		*lignes=*lignes-10;
+		*colonnes=*colonnes-10;
+	}
 }
 
 void cercle(float centreX, float centreY, float rayon)
@@ -337,21 +406,6 @@ void cercle(float centreX, float centreY, float rayon)
 				 centreX+rayon*cos(angle+PasAngulaire), centreY+rayon*sin(angle+PasAngulaire));
 	}
 	
-}
-
-void ModifierPositionCurseur(void)
-{
-	if (etatBoutonSouris() == GaucheAppuye || etatBoutonSouris() == DroiteAppuye)
-	{
-		if(abscisse>=largeurFenetre()*1470/1920 && abscisse<=largeurFenetre()*1870/1920)
-		{
-			if(ordonnee>=hauteurFenetre()*10/1080 && ordonnee<=hauteurFenetre()*110/1080)
-			{
-				float point = (4/3)*(abscisse-(largeurFenetre()*1470/1920));
-				curseur = (largeurFenetre()*1470/1920)+point;
-			}
-		}
-	}
 }
 
 void RetirerCase(float lignes2,float colonnes2)

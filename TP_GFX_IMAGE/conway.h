@@ -20,6 +20,7 @@ int abscisse;
 int boutong=1;
 int boutond=1;
 int pagemenu=1;
+int etatBtnZ=0;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -49,5 +50,8 @@ void AffichePointInterrogationHover(void);
 void AfficheBtnRadio(int btnRad);
 void boutongauche(int boutond);
 void boutondroite(int boutond);
+void AfficheBtnZoom(int etatBtnZ);
+void Zoom(int *lignes, int *colonnes);
+void Dezoom(int *lignes, int *colonnes);
 
 #endif
