@@ -2,17 +2,62 @@
 #ifndef CONWAY
 #define CONWAY
 
+typedef struct DONNEESNOT
+{
+	int X;
+	int Y;
+	int rectXinit;
+	int rectYinit;
+	int rectXfin;
+	int rectYfin;
+	int blocage;
+	int *blocageX;
+	int *blocageY;
+}DONNEESNOT;
+
+typedef struct DONNEESOR
+{
+	int X;
+	int Y;
+	int rectXinit;
+	int rectYinit;
+	int rectXfin;
+	int rectYfin;
+	int blocage1;
+	int blocage2;
+	int *blocage1X;
+	int *blocage1Y;
+	int *blocage2X;
+	int *blocage2Y;
+}DONNEESOR;
+
+typedef struct DONNEESAND
+{
+	int X;
+	int Y;
+	int rectXinit;
+	int rectYinit;
+	int rectXfin;
+	int rectYfin;
+	int blocage1;
+	int blocage2;
+	int *blocage1X;
+	int *blocage1Y;
+	int *blocage2X;
+	int *blocage2Y;
+}DONNEESAND;
+
 int **grille=NULL;
 int lignes_grilles=500; // MAX=500
 int colonnes_grilles=500; // MAX=500
 float curseur;
-float lignes2=100;
-float colonnes2=100;
+float lignes2=500;
+float colonnes2=500;
 int etat = 0;
 int **grillet1=NULL;
 int menu = 0;
 int btnRad=3;
-int limitetemp=4;
+int limitetemp=0;
 int temp=0;
 int ordonnee;
 int abscisse;
@@ -23,6 +68,13 @@ float deplacementX=0;
 float deplacementY=0;
 float ratio;
 int etatBtnZ=0;
+DONNEESNOT *tabNOT=NULL;
+DONNEESOR *tabOR=NULL;
+DONNEESAND *tabAND=NULL;
+int longueurtabNOT=0;
+int longueurtabOR=0;
+int longueurtabAND=0;
+
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -54,5 +106,11 @@ void boutondroite(int boutond);
 void AfficheBtnZoom(void);
 void Zoom(int *lignes, int *colonnes);
 void Dezoom(int *lignes, int *colonnes);
+void GosperGliderGunDroite(int initX, int initY);
+void GosperGliderGunGauche(int initX, int initY);
+void LogicGateNOT(int initX,int initY,int blocage);
+void LogicGateAND(int initX,int initY,int blocage1,int blocage2);
+void LogicGateOR(int initX,int initY,int blocage1,int blocage2);
+void InitialisationTableaux(void);
 
 #endif
