@@ -64,8 +64,6 @@ int abscisse;
 int boutong=1;
 int boutond=1;
 int pagemenu=1;
-float deplacementX=0;
-float deplacementY=0;
 float ratio;
 int etatBtnZ=0;
 DONNEESNOT *tabNOT=NULL;
@@ -74,7 +72,7 @@ DONNEESAND *tabAND=NULL;
 int longueurtabNOT=0;
 int longueurtabOR=0;
 int longueurtabAND=0;
-
+int reset=0;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 

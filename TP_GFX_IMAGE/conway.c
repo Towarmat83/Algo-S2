@@ -33,11 +33,9 @@ void gestionEvenement(EvenementGfx evenement)
 	{
 		temp++;
 	}
-	
 	switch (evenement)
 	{
 		case Initialisation:;
-			InitialisationTableaux();
 			InitialisationGrille();
 			InitialisationGrillet1();
 			InitialiserVariablesGlobales();
@@ -105,18 +103,6 @@ void gestionEvenement(EvenementGfx evenement)
 				case 'f':
 					modePleinEcran();	
 					break;
-				case 'd':
-					deplacementX-=2;
-					break;
-				case 'q':
-					deplacementX+=2;
-					break;
-				case 'z':
-					deplacementY-=2;
-					break;
-				case 's':
-					deplacementY+=2;
-					break;
 			}
 			break;
 			
@@ -128,6 +114,7 @@ void gestionEvenement(EvenementGfx evenement)
 			{
 				if(sqrt(pow(largeurFenetre()/4.923-abscisse,2)+pow(hauteurFenetre()/16.364-ordonnee,2))<=largeurFenetre()/42.6666)
 				{
+					reset=0;
 					etat = 1-etat;
 				}
 				else if((abscisse>=(largeurFenetre()*30/1920)) && (ordonnee>=(hauteurFenetre()*12/1080)) && (abscisse<=(largeurFenetre()*180/1920)) && (ordonnee<=(hauteurFenetre()*120/1080)))
@@ -212,6 +199,40 @@ void gestionEvenement(EvenementGfx evenement)
 			if(etatBoutonSouris() == DroiteRelache || etatBoutonSouris() == GaucheRelache){
 				etatBtnZ=0;
 			}
+			if(etatBoutonSouris()==GaucheAppuye)
+			{
+				if(reset==1)
+				{
+					for(int i=0;i<longueurtabNOT;i++)
+					{
+						if(abscisse>=tabNOT[i].rectXinit*ratio && abscisse<=tabNOT[i].rectXfin*ratio)
+						{
+							if(ordonnee>=tabNOT[i].rectYinit*ratio && ordonnee<=tabNOT[i].rectYfin*ratio)
+							{
+								tabNOT[i].blocage=1-tabNOT[i].blocage;
+								if(tabNOT[i].blocage==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabNOT[i].blocageX[x]][tabNOT[i].blocageY[x]]=0;
+									}
+									
+								}
+								else if(tabNOT[i].blocage==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabNOT[i].blocageX[x]][tabNOT[i].blocageY[x]]=1;
+									}
+									
+								}
+
+							}
+						}
+					}
+				}
+				
+			}
 			break;
 		
 		case Souris:
@@ -237,6 +258,9 @@ void InitialiserVariablesGlobales(void)
 
 void InitialisationTableaux(void)
 {
+	longueurtabNOT=0;
+	longueurtabOR=0;
+	longueurtabAND=0;
 	tabNOT = malloc((lignes_grilles+1)*sizeof(DONNEESNOT));
 	for(int i=0;i<lignes_grilles+1;i++)
 	{
@@ -313,6 +337,7 @@ void InitialisationTableaux(void)
 
 void InitialisationGrille(void)
 {
+	InitialisationTableaux();
 	grille = (int**)malloc((lignes_grilles+1)*sizeof(int*));
 	for(int i=0;i<colonnes_grilles+1;i++)
 	{
@@ -329,10 +354,10 @@ void InitialisationGrille(void)
 	// Début Gosper Glider Gun
 	int initX = 310;
 	int initY = 261;
-	//LogicGateNOT(initX,initY,1);
-	//LogicGateNOT(initX-100,initY-100,1);
-	LogicGateOR(initX,initY,1,0);
-	LogicGateOR(initX+100,initY-150,1,1);
+	LogicGateNOT(initX,initY,1);
+	LogicGateNOT(initX-100,initY-100,1);
+	//LogicGateOR(initX,initY,1,0);
+	//LogicGateOR(initX+100,initY-150,1,1);
 	//LogicGateAND(initX-200,initY-100,1,1);
 	//LogicGateAND(initX,initY,1,0);
 
@@ -419,7 +444,7 @@ void SourisCase(float lignes2,float colonnes2)
 	int colonneY=0;
 	for(int i=1;i<lignes2-1;i++)
 	{
-		if(ratio*(i+deplacementX)>x)
+		if(ratio*(i)>x)
 		{
 			ligneX=i;
 			break;
@@ -427,7 +452,7 @@ void SourisCase(float lignes2,float colonnes2)
 	}
 	for(int j=1;j<colonnes2;j++)
 	{
-		if(ratio*(j+deplacementY)>y)
+		if(ratio*(j)>y)
 		{
 			colonneY=j;
 			break;
@@ -445,7 +470,7 @@ void AffichageMatrice(float lignes2,float colonnes2)
 			if(grille[i][j]==1)
 			{
 				couleurCourante(255,169,0);
-				rectangle((i+deplacementX)*ratio,(j+deplacementY)*ratio,(i+deplacementX)*ratio-ratio,(j+deplacementY)*ratio-ratio);
+				rectangle((i)*ratio,(j)*ratio,(i)*ratio-ratio,(j)*ratio-ratio);
 			}
 		}
 	}
@@ -607,7 +632,7 @@ void RetirerCase(float lignes2,float colonnes2)
 	int colonneY=0;
 	for(int i=0;i<lignes2+2;i++)
 	{
-		if(ratio*(i+deplacementX)>x)
+		if(ratio*(i)>x)
 		{
 			ligneX=i;
 			break;
@@ -615,7 +640,7 @@ void RetirerCase(float lignes2,float colonnes2)
 	}
 	for(int j=0;j<colonnes2+2;j++)
 	{
-		if(ratio*(j+deplacementY)>y)
+		if(ratio*(j)>y)
 		{
 			colonneY=j;
 			break;
@@ -915,7 +940,7 @@ void AffichageGrillet1(float lignes2,float colonnes2)
 			if(grillet1[i][j]==1)
 			{
 				couleurCourante(0,145,255);
-				rectangle((i+deplacementX)*ratio,(j+deplacementY)*ratio,(i+deplacementX)*ratio-ratio,(j+deplacementY)*ratio-ratio);
+				rectangle((i)*ratio,(j)*ratio,(i)*ratio-ratio,(j)*ratio-ratio);
 			}
 		}
 	}
@@ -1099,7 +1124,7 @@ void AffichePointInterrogation(void)
 		rectangle(largeurFenetre()*30/1920,hauteurFenetre()*10/1080,largeurFenetre()*180/1920,hauteurFenetre()*120/1080);
 		couleurCourante(0,0,0);
 		rectangle(largeurFenetre()*32/1920,hauteurFenetre()*12/1080,largeurFenetre()*178/1920,hauteurFenetre()*118/1080);
-		// Point d'intérrogation
+		// Point d'interrogation
 		couleurCourante(255,255,255);
 	}
 	rectangle(largeurFenetre()*95/1920,hauteurFenetre()*25/1080,largeurFenetre()*110/1920,hauteurFenetre()*35/1080); // Point du bas
@@ -1112,14 +1137,8 @@ void AffichePointInterrogation(void)
 
 void ResetGrille(void)
 {
-	for(int i=0;i<lignes_grilles;i++)
-	{
-		for(int j=0;j<colonnes_grilles;j++)
-		{
-			grille[i][j]=0;
-			grillet1[i][j]=0;
-		}
-	}
+	reset=1;
+	InitialisationGrille();
 }
 
 void AfficheBtnLectureHover(void)
