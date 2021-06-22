@@ -48,15 +48,15 @@ typedef struct DONNEESAND
 }DONNEESAND;
 
 int **grille=NULL;
-int lignes_grilles=500; // MAX=500
-int colonnes_grilles=500; // MAX=500
+int lignes_grilles=600; // MAX=500
+int colonnes_grilles=600; // MAX=500
 float curseur;
-float lignes2=500;
-float colonnes2=500;
+float lignes2=600;
+float colonnes2=600;
 int etat = 0;
 int **grillet1=NULL;
 int menu = 0;
-int btnRad=3;
+int btnRad=5;
 int limitetemp=0;
 int temp=0;
 int ordonnee;
@@ -65,7 +65,6 @@ int boutong=1;
 int boutond=1;
 int pagemenu=1;
 float ratio;
-int etatBtnZ=0;
 DONNEESNOT *tabNOT=NULL;
 DONNEESOR *tabOR=NULL;
 DONNEESAND *tabAND=NULL;
@@ -73,6 +72,12 @@ int longueurtabNOT=0;
 int longueurtabOR=0;
 int longueurtabAND=0;
 int reset=1;
+int etatZoom=0;
+int clicHautX=0;
+int clicBasX=600;
+int clicHautY=600;
+int clicBasY=0;
+int boutonGrille=0;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -81,7 +86,6 @@ void AffichageMenu(void);
 void AffichageMatrice(float lignes2,float colonnes2);
 void SourisCase(float lignes2,float colonnes2);
 void AffichageGrille(float ligne2,float colonnes2);
-void ModifierPositionCurseur(void);
 void RetirerCase(float lignes2,float colonnes2);
 void AfficheBtnLecture(void);
 void InitialisationGrillet1(void);
@@ -102,13 +106,14 @@ void AfficheBtnRadio(int btnRad);
 void boutongauche(int boutond);
 void boutondroite(int boutond);
 void AfficheBtnZoom(void);
-void Zoom(int *lignes, int *colonnes);
-void Dezoom(int *lignes, int *colonnes);
 void GosperGliderGunDroite(int initX, int initY);
 void GosperGliderGunGauche(int initX, int initY);
 void LogicGateNOT(int initX,int initY,int blocage);
 void LogicGateAND(int initX,int initY,int blocage1,int blocage2);
 void LogicGateOR(int initX,int initY,int blocage1,int blocage2);
 void InitialisationTableaux(void);
+void afficherRectangleZoom(void);
+void AffichageBoutonGrille(void);
+
 
 #endif
