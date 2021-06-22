@@ -230,6 +230,110 @@ void gestionEvenement(EvenementGfx evenement)
 							}
 						}
 					}
+
+					for(int i=0;i<longueurtabAND;i++)
+					{
+						if(abscisse>=tabAND[i].rectXinit*ratio && abscisse<=(tabAND[i].rectXinit-20+(tabAND[i].rectXfin-tabAND[i].rectXinit)/2)*ratio)
+						{
+							if(ordonnee>=tabAND[i].rectYinit*ratio && ordonnee<=tabAND[i].rectYfin*ratio)
+							{
+								tabAND[i].blocage1=1-tabAND[i].blocage1;
+								if(tabAND[i].blocage1==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage1X[x]][tabAND[i].blocage1Y[x]]=0;
+									}
+									
+								}
+								else if(tabAND[i].blocage1==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage1X[x]][tabAND[i].blocage1Y[x]]=1;
+									}
+									
+								}
+
+							}
+						}
+						if(abscisse>=(tabAND[i].rectXinit-20+(tabAND[i].rectXfin-tabAND[i].rectXinit)/2)*ratio && abscisse<=tabAND[i].rectXfin*ratio)
+						{
+							if(ordonnee>=tabAND[i].rectYinit*ratio && ordonnee<=tabAND[i].rectYfin*ratio)
+							{
+								tabAND[i].blocage2=1-tabAND[i].blocage2;
+								if(tabAND[i].blocage2==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage2X[x]][tabAND[i].blocage2Y[x]]=0;
+									}
+									
+								}
+								else if(tabAND[i].blocage2==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage2X[x]][tabAND[i].blocage2Y[x]]=1;
+									}
+									
+								}
+
+							}
+						}
+					}
+
+					for(int i=0;i<longueurtabOR;i++)
+					{
+						if(abscisse>=tabOR[i].rectXinit*ratio && abscisse<=(tabOR[i].rectXinit+(tabOR[i].rectXfin-tabOR[i].rectXinit)/2)*ratio)
+						{
+							if(ordonnee>=tabOR[i].rectYinit*ratio && ordonnee<=tabOR[i].rectYfin*ratio)
+							{
+								tabOR[i].blocage1=1-tabOR[i].blocage1;
+								if(tabOR[i].blocage1==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage1X[x]][tabOR[i].blocage1Y[x]]=0;
+									}
+									
+								}
+								else if(tabOR[i].blocage1==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage1X[x]][tabOR[i].blocage1Y[x]]=1;
+									}
+									
+								}
+
+							}
+						}
+						if(abscisse>=(tabOR[i].rectXinit+(tabOR[i].rectXfin-tabOR[i].rectXinit)/2)*ratio && abscisse<=tabOR[i].rectXfin*ratio)
+						{
+							if(ordonnee>=tabOR[i].rectYinit*ratio && ordonnee<=tabOR[i].rectYfin*ratio)
+							{
+								tabOR[i].blocage2=1-tabOR[i].blocage2;
+								if(tabOR[i].blocage2==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage2X[x]][tabOR[i].blocage2Y[x]]=0;
+									}
+									
+								}
+								else if(tabOR[i].blocage2==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage2X[x]][tabOR[i].blocage2Y[x]]=1;
+									}
+									
+								}
+
+							}
+						}
+					}
 				}
 				
 			}
@@ -355,10 +459,10 @@ void InitialisationGrille(void)
 	int initX = 310;
 	int initY = 261;
 	LogicGateNOT(initX,initY,1);
-	LogicGateNOT(initX-100,initY-100,1);
+	//LogicGateNOT(initX-100,initY-100,1);
 	//LogicGateOR(initX,initY,1,0);
-	//LogicGateOR(initX+100,initY-150,1,1);
-	//LogicGateAND(initX-200,initY-100,1,1);
+	LogicGateOR(initX+100,initY-150,0,1);
+	LogicGateAND(initX-200,initY-100,1,0);
 	//LogicGateAND(initX,initY,1,0);
 
 	if(grille==NULL)
@@ -409,6 +513,9 @@ void AffichageGrille(float ligne2,float colonnes2)
 			ligne(tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
 			ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio);
 			ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYfin*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
+			epaisseurDeTrait(3);
+			afficheChaine("NOT",20,tabNOT[i].rectXfin*ratio-50,tabNOT[i].rectYfin*ratio-25);
+			epaisseurDeTrait(1);
 		}
 	}
 	if(longueurtabAND>0)
@@ -420,6 +527,9 @@ void AffichageGrille(float ligne2,float colonnes2)
 			ligne(tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
 			ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio);
 			ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYfin*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
+			epaisseurDeTrait(3);
+			afficheChaine("AND",20,tabAND[i].rectXfin*ratio-50,tabAND[i].rectYfin*ratio-25);
+			epaisseurDeTrait(1);
 		}
 	}
 	if(longueurtabOR>0)
@@ -431,6 +541,9 @@ void AffichageGrille(float ligne2,float colonnes2)
 			ligne(tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
 			ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio);
 			ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYfin*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
+			epaisseurDeTrait(3);
+			afficheChaine("OR",20,tabOR[i].rectXfin*ratio-50,tabOR[i].rectYfin*ratio-25);
+			epaisseurDeTrait(1);
 		}
 	}
 

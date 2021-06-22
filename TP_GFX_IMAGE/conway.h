@@ -72,7 +72,7 @@ DONNEESAND *tabAND=NULL;
 int longueurtabNOT=0;
 int longueurtabOR=0;
 int longueurtabAND=0;
-int reset=0;
+int reset=1;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
