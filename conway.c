@@ -25,15 +25,8 @@ void gestionEvenement(EvenementGfx evenement)
 {
 	abscisse = abscisseSouris();
 	ordonnee = ordonneeSouris();
-	if(temp==limitetemp)
-	{
-		temp=0;
-	}
-	else
-	{
-		temp++;
-	}
-	
+	if(temp==limitetemp) temp=0;
+	else temp++;
 	switch (evenement)
 	{
 		case Initialisation:;
@@ -44,51 +37,32 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 		
 		case Temporisation:
-			ModifierPositionCurseur();
 			InitialiserLignesColonnesAffichage();
-			if (etatBoutonSouris() == GaucheAppuye)
+			if(page==0 && etatZoom==1 && ordonneeSouris()>=hauteurFenetre()*129.6/1080 && (etatBoutonSouris() == GaucheAppuye))
 			{
-				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
-				{
-					SourisCase(lignes2,colonnes2);
-				}
-			}
-			if(etatBoutonSouris() == DroiteAppuye)
-			{
-				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
-				{
-					RetirerCase(lignes2,colonnes2);
-				}
-				
-			}
-			if(etat==1 && temp==limitetemp)
-			{
-				RemplirGrillet1();
-				PassageTempsSuperieur();
+				clicBasX=abscisseSouris();
+				clicBasY=ordonneeSouris();
 			}
 			rafraichisFenetre();
 			break;
 			
 		case Affichage:
+			if(etatZoom==1 && ordonneeSouris()>=hauteurFenetre()*129.6/1080 && page==0) afficherRectangleZoom();
+			if(etat==1 && temp==limitetemp)
+			{
+				RemplirGrillet1();
+				PassageTempsSuperieur();
+			}
 			couleurCourante(124, 125, 124);
 			epaisseurDeTrait(1);
 			AffichageGrille(lignes2,colonnes2);
 			AffichageMatrice(lignes2,colonnes2);
-			if(etat==1)
-			{
-				AffichageGrillet1(lignes2,colonnes2);
-			}
+			if(etat==1) AffichageGrillet1(lignes2,colonnes2);
 			epaisseurDeTrait(3);
 			AffichageMenu();
 			couleurCourante(255,255,255); 
-			AfficheBtnLecture();
-			AfficheBtnReset();
-			AfficheBtnLectureHover();
-			AfficheBtnResetHover();
-			AffichePointInterrogation();
-			AffichePointInterrogationHover();
-			AfficheBtnRadio(btnRad);
-			AfficheBtnZoom();
+			AfficheFlecheDroite();
+			AfficheFlecheGauche();
 			break;
 			
 		case Clavier:
@@ -103,18 +77,6 @@ void gestionEvenement(EvenementGfx evenement)
 				case 'f':
 					modePleinEcran();	
 					break;
-				case 'd':
-					deplacementX-=2;
-					break;
-				case 'q':
-					deplacementX+=2;
-					break;
-				case 'z':
-					deplacementY-=2;
-					break;
-				case 's':
-					deplacementY+=2;
-					break;
 			}
 			break;
 			
@@ -122,20 +84,41 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 
 		case BoutonSouris:
+
 			if(etatBoutonSouris() == DroiteAppuye || etatBoutonSouris() == GaucheAppuye)
 			{
+			//éléments cliquable du menu 1
+				if(page==0){
 				if(sqrt(pow(largeurFenetre()/4.923-abscisse,2)+pow(hauteurFenetre()/16.364-ordonnee,2))<=largeurFenetre()/42.6666)
 				{
+					reset=0;
 					etat = 1-etat;
 				}
-				else if((abscisse>=(largeurFenetre()*30/1920)) && (ordonnee>=(hauteurFenetre()*12/1080)) && (abscisse<=(largeurFenetre()*180/1920)) && (ordonnee<=(hauteurFenetre()*120/1080)))
-				{
-					menu = 1-menu;
-				}
+				else if((abscisse>=largeurFenetre()*1468/1920 && abscisse<=largeurFenetre()*1647/1920) && (ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080)) boutonGrille=1-boutonGrille;
+				else if((abscisse>=(largeurFenetre()*30/1920)) && (ordonnee>=(hauteurFenetre()*12/1080)) && (abscisse<=(largeurFenetre()*180/1920)) && (ordonnee<=(hauteurFenetre()*120/1080))) menu = 1-menu;
 				else if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45)
 				{
+					reset=1-reset;
 					etat = 0;
-					ResetGrille();
+					if(NotOnOff==1)
+					{
+						ResetGrille();
+						InitialisationGrille();
+						LogicGateNOT(60,90,1);
+					}
+					else if(AndOnOff==1)
+					{
+						ResetGrille();
+						InitialisationGrille();
+						LogicGateAND(90,90,1,1);
+					}
+					else if(OrOnOff==1)
+					{
+						ResetGrille();
+						InitialisationGrille();
+						LogicGateOR(115,110,1,1);
+					}
+					else ResetGrille();
 				}
 				else if((abscisse>=largeurFenetre()*566/1920 && abscisse<=largeurFenetre()*686/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
 				{
@@ -171,44 +154,214 @@ void gestionEvenement(EvenementGfx evenement)
 				{
 					boutong++;
 					boutond=1;
-					if(boutong>2)
-					{
-					boutong=1;
-					}
+					if(boutong>2) boutong=1;
 					pagemenu--;
 				}
 				if((abscisse>=largeurFenetre()/16*14.25-10 && abscisse<=largeurFenetre()/16*15+10) && (ordonnee>=hauteurFenetre()/32*14-10 && ordonnee<=hauteurFenetre()/32*18+10))
 				{
 					boutond++;
 					boutong=1;
-					if(boutond>2)
-					{
-					boutond=1;
-					}
+					if(boutond>2) boutond=1;
 					pagemenu++;
 				}
-				if (pagemenu<1)
+				if (pagemenu<1) pagemenu=3;
+				if (pagemenu>3) pagemenu=1;
+				if(abscisse>=largeurFenetre()*1693/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1872/1920 && ordonnee<=hauteurFenetre()*122/1080) LoupeOnOff = 1 - LoupeOnOff;
+				if(abscisse>=largeurFenetre()*1468/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1647/1920 && ordonnee<=hauteurFenetre()*122/1080) GrilleOnOff = 1 - GrilleOnOff;
+			if (etatBoutonSouris() == GaucheAppuye)
+			{
+				if(abscisse>=largeurFenetre()*1693/1920 && abscisse<=largeurFenetre()*1872/1920)
 				{
-					pagemenu=3;
-				}
-				if (pagemenu>3)
-				{
-					pagemenu=1;
-				}
-				if(abscisse>=largeurFenetre()*1693/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1872/1920 && ordonnee<=hauteurFenetre()*122/1080){
-					Dezoom(&lignes_grilles, &colonnes_grilles);
-					etatBtnZ=2;
-				}
-				if(abscisse>=largeurFenetre()*1468/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1647/1920 && ordonnee<=hauteurFenetre()*122/1080){
-					Zoom(&lignes_grilles, &colonnes_grilles);
-					etatBtnZ=1;
-				}
-				if(etatBoutonSouris() == DroiteRelache || etatBoutonSouris() == GaucheRelache){
-					etatBtnZ=0;
+					if(ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080) etatZoom=1-etatZoom;
 				}
 			}
-			if(etatBoutonSouris() == DroiteRelache || etatBoutonSouris() == GaucheRelache){
-				etatBtnZ=0;
+			if(etatBoutonSouris()==GaucheAppuye && ordonneeSouris()>=hauteurFenetre()*129.6/1080)
+			{
+				clicHautX=abscisseSouris();
+				clicHautY=ordonneeSouris();
+			}
+			if(etatBoutonSouris()==GaucheAppuye)
+			{
+				if(reset==1 && page==0 || page==1)
+				{
+					for(int i=0;i<longueurtabNOT;i++)
+					{
+						if(abscisse>=tabNOT[i].rectXinit*ratio && abscisse<=tabNOT[i].rectXfin*ratio)
+						{
+							if(ordonnee>=tabNOT[i].rectYinit*ratio && ordonnee<=tabNOT[i].rectYfin*ratio)
+							{
+								tabNOT[i].blocage=1-tabNOT[i].blocage;
+								if(tabNOT[i].blocage==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabNOT[i].blocageX[x]][tabNOT[i].blocageY[x]]=0;
+									}
+								}
+								else if(tabNOT[i].blocage==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabNOT[i].blocageX[x]][tabNOT[i].blocageY[x]]=1;
+									}
+								}
+							}
+						}
+					}
+					for(int i=0;i<longueurtabAND;i++)
+					{
+						if(abscisse>=tabAND[i].rectXinit*ratio && abscisse<=(tabAND[i].rectXinit-20+(tabAND[i].rectXfin-tabAND[i].rectXinit)/2)*ratio)
+						{
+							if(ordonnee>=tabAND[i].rectYinit*ratio && ordonnee<=tabAND[i].rectYfin*ratio)
+							{
+								tabAND[i].blocage1=1-tabAND[i].blocage1;
+								if(tabAND[i].blocage1==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage1X[x]][tabAND[i].blocage1Y[x]]=0;
+									}
+								}
+								else if(tabAND[i].blocage1==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage1X[x]][tabAND[i].blocage1Y[x]]=1;
+									}
+								}
+							}
+						}
+						if(abscisse>=(tabAND[i].rectXinit-20+(tabAND[i].rectXfin-tabAND[i].rectXinit)/2)*ratio && abscisse<=tabAND[i].rectXfin*ratio)
+						{
+							if(ordonnee>=tabAND[i].rectYinit*ratio && ordonnee<=tabAND[i].rectYfin*ratio)
+							{
+								tabAND[i].blocage2=1-tabAND[i].blocage2;
+								if(tabAND[i].blocage2==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage2X[x]][tabAND[i].blocage2Y[x]]=0;
+									}
+								}
+								else if(tabAND[i].blocage2==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabAND[i].blocage2X[x]][tabAND[i].blocage2Y[x]]=1;
+									}
+								}
+							}
+						}
+					}
+					for(int i=0;i<longueurtabOR;i++)
+					{
+						if(abscisse>=tabOR[i].rectXinit*ratio && abscisse<=(tabOR[i].rectXinit+(tabOR[i].rectXfin-tabOR[i].rectXinit)/2)*ratio)
+						{
+							if(ordonnee>=tabOR[i].rectYinit*ratio && ordonnee<=tabOR[i].rectYfin*ratio)
+							{
+								tabOR[i].blocage1=1-tabOR[i].blocage1;
+								if(tabOR[i].blocage1==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage1X[x]][tabOR[i].blocage1Y[x]]=0;
+									}
+								}
+								else if(tabOR[i].blocage1==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage1X[x]][tabOR[i].blocage1Y[x]]=1;
+									}
+								}
+							}
+						}
+						if(abscisse>=(tabOR[i].rectXinit+(tabOR[i].rectXfin-tabOR[i].rectXinit)/2)*ratio && abscisse<=tabOR[i].rectXfin*ratio)
+						{
+							if(ordonnee>=tabOR[i].rectYinit*ratio && ordonnee<=tabOR[i].rectYfin*ratio)
+							{
+								tabOR[i].blocage2=1-tabOR[i].blocage2;
+								if(tabOR[i].blocage2==0)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage2X[x]][tabOR[i].blocage2Y[x]]=0;
+									}
+								}
+								else if(tabOR[i].blocage2==1)
+								{
+									for(int x=0;x<7;x++)
+									{
+										grille[tabOR[i].blocage2X[x]][tabOR[i].blocage2Y[x]]=1;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		if(abscisse>=largeurFenetre()*1902/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*1911/1920 && ordonnee>=hauteurFenetre()*10/1080) page=1;
+		else if(abscisse>=largeurFenetre()*9/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*18/1920 && ordonnee>=hauteurFenetre()*10/1080) page=1;
+		}
+		//éléments cliquable du menu 2
+			else if(page==1){
+				if(abscisse>=largeurFenetre()*1902/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*1911/1920 && ordonnee>=hauteurFenetre()*10/1080) page=0;
+				else if(abscisse>=largeurFenetre()*9/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*18/1920 && ordonnee>=hauteurFenetre()*10/1080) page=0;
+				if(abscisse>=largeurFenetre()*30/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*205/1920 && ordonnee>=hauteurFenetre()*10/1080){
+					NotOnOff = 1 - NotOnOff;
+					AndOnOff = 0;
+					OrOnOff = 0;
+					if(NotOnOff==1)
+					{
+						InitialisationGrille();
+						lignes2=200;
+						colonnes2=200;
+						LogicGateNOT(60,90,1);
+					}
+					if(NotOnOff==0)
+					{
+						lignes2=lignes_grilles;
+						colonnes2=colonnes_grilles;
+						InitialisationGrille();
+					}
+				}
+				else if(abscisse>=largeurFenetre()*251/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*424/1920 && ordonnee>=hauteurFenetre()*10/1080){
+					AndOnOff = 1 - AndOnOff;
+					NotOnOff = 0;
+					OrOnOff = 0;
+					if(AndOnOff==1)
+					{
+						InitialisationGrille();
+						lignes2=200;
+						colonnes2=200;
+						LogicGateAND(90,90,1,1);
+					}
+					if(AndOnOff==0)
+					{
+						lignes2=lignes_grilles;
+						colonnes2=colonnes_grilles;
+						InitialisationGrille();
+					}
+				}
+				else if(abscisse>=largeurFenetre()*470/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*643/1920 && ordonnee>=hauteurFenetre()*10/1080){
+					OrOnOff = 1 - OrOnOff;
+					NotOnOff = 0;
+					AndOnOff = 0;
+					if(OrOnOff==1)
+					{
+						InitialisationGrille();
+						lignes2=250;
+						colonnes2=250;
+						LogicGateOR(115,110,1,1);
+					}
+					if(OrOnOff==0)
+					{
+						lignes2=lignes_grilles;
+						colonnes2=colonnes_grilles;
+						InitialisationGrille();
+					}
+				}
+			}
 			}
 			break;
 		
@@ -233,8 +386,88 @@ void InitialiserVariablesGlobales(void)
 	curseur=largeurFenetre()*1550/1920;
 }
 
-void InitialisationGrille()
+void InitialisationTableaux(void)
 {
+	longueurtabNOT=0;
+	longueurtabOR=0;
+	longueurtabAND=0;
+	tabNOT = malloc((lignes_grilles+1)*sizeof(DONNEESNOT));
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		tabNOT[i].X=0;
+		tabNOT[i].Y=0;
+		tabNOT[i].rectXinit=0;
+		tabNOT[i].rectYinit=0;
+		tabNOT[i].rectXfin=0;
+		tabNOT[i].rectYfin=0;
+		tabNOT[i].blocage=0;
+		for(int j=0;j<7;j++)
+		{
+			tabNOT[j].blocageX=(int*)malloc(sizeof(int)*6);
+			tabNOT[j].blocageY=(int*)malloc(sizeof(int)*6);
+		}
+	}
+	if(tabNOT==NULL)
+	{
+		printf("\nImpossible d'allouer de la mémoire...");
+		exit(EXIT_FAILURE);
+	}
+
+	tabAND = malloc((lignes_grilles+1)*sizeof(DONNEESAND));
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		tabAND[i].X=0;
+		tabAND[i].Y=0;
+		tabAND[i].rectXinit=0;
+		tabAND[i].rectYinit=0;
+		tabAND[i].rectXfin=0;
+		tabAND[i].rectYfin=0;
+		tabAND[i].blocage1=0;
+		tabAND[i].blocage2=0;
+		for(int j=0;j<7;j++)
+		{
+			tabAND[j].blocage1X=(int*)malloc(sizeof(int)*6);
+			tabAND[j].blocage1Y=(int*)malloc(sizeof(int)*6);
+			tabAND[j].blocage2X=(int*)malloc(sizeof(int)*6);
+			tabAND[j].blocage2Y=(int*)malloc(sizeof(int)*6);
+		}
+	}
+	if(tabAND==NULL)
+	{
+		printf("\nImpossible d'allouer de la mémoire...");
+		exit(EXIT_FAILURE);
+	}
+
+	tabOR = malloc((lignes_grilles+1)*sizeof(DONNEESOR));
+	for(int i=0;i<lignes_grilles+1;i++)
+	{
+		tabOR[i].X=0;
+		tabOR[i].Y=0;
+		tabOR[i].rectXinit=0;
+		tabOR[i].rectYinit=0;
+		tabOR[i].rectXfin=0;
+		tabOR[i].rectYfin=0;
+		tabOR[i].blocage1=0;
+		tabOR[i].blocage2=0;
+		for(int j=0;j<7;j++)
+		{
+			tabOR[j].blocage1X=(int*)malloc(sizeof(int)*6);
+			tabOR[j].blocage1Y=(int*)malloc(sizeof(int)*6);
+			tabOR[j].blocage2X=(int*)malloc(sizeof(int)*6);
+			tabOR[j].blocage2Y=(int*)malloc(sizeof(int)*6);
+		}
+	}
+
+	if(tabOR==NULL)
+	{
+		printf("\nImpossible d'allouer de la mémoire...");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void InitialisationGrille(void)
+{
+	InitialisationTableaux();
 	grille = (int**)malloc((lignes_grilles+1)*sizeof(int*));
 	for(int i=0;i<colonnes_grilles+1;i++)
 	{
@@ -247,23 +480,6 @@ void InitialisationGrille()
 			grille[i][j]=0;
 		}
 	}
-	for(int j=0;j<colonnes_grilles+1;j++)
-	{
-		grille[0][j]=2;
-	}
-	for(int j=0;j<colonnes_grilles+1;j++)
-	{
-		grille[lignes_grilles][j]=2;
-	}
-	for(int i=0;i<lignes_grilles+1;i++)
-	{
-		grille[i][0]=2;
-	}
-	for(int i=0;i<lignes_grilles+1;i++)
-	{
-		grille[i][colonnes_grilles]=2;
-	}
-
 
 	if(grille==NULL)
 	{
@@ -283,53 +499,174 @@ void LibererMemoireGrille(void)
 
 void AffichageMenu(void)
 {
-	couleurCourante(0,255,0);
-	ligne(0,hauteurFenetre()*129.6/1080,largeurFenetre(),hauteurFenetre()*129.6/1080);
-	couleurCourante(0,0,0);
-	rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
-	couleurCourante(0,255,0);
-	ligne(largeurFenetre()*1420/1920,0,largeurFenetre()*1420/1920,hauteurFenetre()*129.6/1080);
-	ligne(largeurFenetre()*460/1920,0,largeurFenetre()*460/1920,hauteurFenetre()*129.6/1080);
-	couleurCourante(155,255,0);
+	//affichage du menu 1
+	if (page == 0)
+	{
+		couleurCourante(0,255,0);
+		ligne(0,hauteurFenetre()*129.6/1080,largeurFenetre(),hauteurFenetre()*129.6/1080);
+		couleurCourante(0,0,0);
+		rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
+		couleurCourante(0,255,0);
+		ligne(largeurFenetre()*1420/1920,0,largeurFenetre()*1420/1920,hauteurFenetre()*129.6/1080);
+		ligne(largeurFenetre()*460/1920,0,largeurFenetre()*460/1920,hauteurFenetre()*129.6/1080);
+		couleurCourante(155,255,0);
+		AffichageBoutonGrille();
+		AfficheBtnLecture();
+		AfficheBtnReset();
+		AfficheBtnLectureHover();
+		AfficheBtnResetHover();
+		AffichePointInterrogation();
+		AffichePointInterrogationHover();
+		AfficheBtnRadio(btnRad);
+		AfficheBtnZoom();
+	}
+	//affichage du menu 2
+	else if (page == 1)
+	{
+		couleurCourante(0,255,0);
+		ligne(0,hauteurFenetre()*129.6/1080,largeurFenetre(),hauteurFenetre()*129.6/1080);
+		couleurCourante(0,0,0);
+		rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
+		couleurCourante(255,255,255);	
+		AfficheLogicGateNOT();
+		AfficheLogicGateAND();
+		AfficheLogicGateOR();
+	}
 }
 
 void AffichageGrille(float ligne2,float colonnes2)
 {
-	couleurCourante(42, 43, 43);
-	for(int i=0;i<colonnes2+1;i++)
+	if(boutonGrille==0)
 	{
-		ligne(ratio*(i),0,ratio*(i),hauteurFenetre());
-	}
-	for(int j=0;j<colonnes2+1;j++)
-	{
-		ligne(0,ratio*(j),largeurFenetre(),ratio*(j));
-	}
-}
-
-void SourisCase(float lignes2,float colonnes2)
-{
-	float x = abscisse;
-	float y = ordonnee;
-	int ligneX=0;
-	int colonneY=0;
-	for(int i=1;i<lignes2-1;i++)
-	{
-		if(ratio*(i+deplacementX)>x)
+		couleurCourante(42, 43, 43);
+		for(int i=0;i<lignes2;i++)
 		{
-			ligneX=i;
-			break;
+			ligne(ratio*(i),0,ratio*(i),hauteurFenetre());
+		}
+		for(int j=0;j<colonnes2;j++)
+		{
+			ligne(0,ratio*(j),largeurFenetre(),ratio*(j));
 		}
 	}
-	for(int j=1;j<colonnes2;j++)
-	{
-		if(ratio*(j+deplacementY)>y)
-		{
-			colonneY=j;
-			break;
-		}
-	}
-	grille[ligneX][colonneY]=1;
 	
+	if(longueurtabNOT>0)
+	{
+		couleurCourante(255, 0, 0);
+		for(int i=0;i<longueurtabNOT;i++)
+		{
+			if(boutonGrille==1)
+			{
+				ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXinit*ratio,tabNOT[i].rectYfin*ratio);
+				ligne(tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
+				ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio);
+				ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYfin*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
+				epaisseurDeTrait(3);
+				afficheChaine("NOT",30,tabNOT[i].rectXfin*ratio-70,tabNOT[i].rectYfin*ratio-35);
+				afficheChaine("INPUT",30,tabNOT[i].rectXinit*ratio-100,tabNOT[i].rectYinit*ratio+190);
+				afficheChaine("OUTPUT",30,tabNOT[i].rectXfin*ratio+10,tabNOT[i].rectYfin*ratio-210);
+				if(tabNOT[i].blocage==1)
+				{
+					afficheChaine("0",30,tabNOT[i].rectXinit*ratio-70,tabNOT[i].rectYinit*ratio+150);
+					afficheChaine("1",30,tabNOT[i].rectXfin*ratio+50,tabNOT[i].rectYfin*ratio-250);
+				}
+				else
+				{
+					afficheChaine("1",30,tabNOT[i].rectXinit*ratio-70,tabNOT[i].rectYinit*ratio+150);
+					afficheChaine("0",30,tabNOT[i].rectXfin*ratio+50,tabNOT[i].rectYfin*ratio-250);
+				}
+				epaisseurDeTrait(1);
+			}
+		}
+	}
+	if(longueurtabAND>0)
+	{
+		couleurCourante(255, 0, 0);
+		for(int i=0;i<longueurtabAND;i++)
+		{
+			if(boutonGrille==1)
+			{
+				ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXinit*ratio,tabAND[i].rectYfin*ratio);
+				ligne(tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
+				ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio);
+				ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYfin*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
+				epaisseurDeTrait(3);
+				afficheChaine("AND",30,tabAND[i].rectXfin*ratio-80,tabAND[i].rectYfin*ratio-35);
+				afficheChaine("INPUT A",30,tabAND[i].rectXinit*ratio+110,tabAND[i].rectYinit*ratio+790);
+				afficheChaine("INPUT B",30,tabAND[i].rectXinit*ratio+620,tabAND[i].rectYinit*ratio+790);
+				afficheChaine("OUTPUT",30,tabAND[i].rectXfin*ratio-350,tabAND[i].rectYfin*ratio-700);
+				if(tabAND[i].blocage1==1 && tabAND[i].blocage2==1)
+				{
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				else if(tabAND[i].blocage1==0 && tabAND[i].blocage2==1)
+				{
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				else if(tabAND[i].blocage1==1 && tabAND[i].blocage2==0)
+				{
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				else if(tabAND[i].blocage1==0 && tabAND[i].blocage2==0)
+				{
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("1",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				epaisseurDeTrait(1);
+			}
+		}
+	}
+	if(longueurtabOR>0)
+	{
+		couleurCourante(255, 0, 0);
+		for(int i=0;i<longueurtabOR;i++)
+		{
+			if(boutonGrille==1)
+			{
+				ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXinit*ratio,tabOR[i].rectYfin*ratio);
+				ligne(tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
+				ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio);
+				ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYfin*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
+				epaisseurDeTrait(3);
+				afficheChaine("OR",30,tabOR[i].rectXfin*ratio-55,tabOR[i].rectYfin*ratio-35);
+				afficheChaine("INPUT A",30,tabOR[i].rectXinit*ratio+400,tabOR[i].rectYinit*ratio+770);
+				afficheChaine("INPUT B",30,tabOR[i].rectXinit*ratio+820,tabOR[i].rectYinit*ratio+770);
+				afficheChaine("OUTPUT",30,tabOR[i].rectXfin*ratio-900,tabOR[i].rectYfin*ratio-680);
+				if(tabOR[i].blocage1==1 && tabOR[i].blocage2==1)
+				{
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("0",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				else if(tabOR[i].blocage1==0 && tabOR[i].blocage2==1)
+				{
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				else if(tabOR[i].blocage1==1 && tabOR[i].blocage2==0)
+				{
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				else if(tabOR[i].blocage1==0 && tabOR[i].blocage2==0)
+				{
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				epaisseurDeTrait(1);
+			}
+		}
+	}
+
 }
 
 void AffichageMatrice(float lignes2,float colonnes2)
@@ -341,7 +678,59 @@ void AffichageMatrice(float lignes2,float colonnes2)
 			if(grille[i][j]==1)
 			{
 				couleurCourante(255,169,0);
-				rectangle((i+deplacementX)*ratio,(j+deplacementY)*ratio,(i+deplacementX)*ratio-ratio,(j+deplacementY)*ratio-ratio);		
+				rectangle((i)*ratio,(j)*ratio,(i)*ratio-ratio,(j)*ratio-ratio);
+			}
+		}
+	}
+	if(longueurtabNOT>0)
+	{
+		for(int i=0;i<longueurtabNOT;i++)
+		{
+			for(int x=0;x<7;x++)
+			{
+				if(tabNOT[i].blocage==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabNOT[i].blocageX[x]*ratio,tabNOT[i].blocageY[x]*ratio,tabNOT[i].blocageX[x]*ratio-ratio,tabNOT[i].blocageY[x]*ratio-ratio);
+				}
+			}
+		}
+	}
+	if(longueurtabAND>0)
+	{
+		for(int i=0;i<longueurtabAND;i++)
+		{
+			for(int x=0;x<7;x++)
+			{
+				if(tabAND[i].blocage1==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabAND[i].blocage1X[x]*ratio,tabAND[i].blocage1Y[x]*ratio,tabAND[i].blocage1X[x]*ratio-ratio,tabAND[i].blocage1Y[x]*ratio-ratio);
+				}
+				if(tabAND[i].blocage2==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabAND[i].blocage2X[x]*ratio,tabAND[i].blocage2Y[x]*ratio,tabAND[i].blocage2X[x]*ratio-ratio,tabAND[i].blocage2Y[x]*ratio-ratio);
+				}
+			}
+		}
+	}
+	if(longueurtabOR>0)
+	{
+		for(int i=0;i<longueurtabOR;i++)
+		{
+			for(int x=0;x<7;x++)
+			{
+				if(tabOR[i].blocage1==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabOR[i].blocage1X[x]*ratio,tabOR[i].blocage1Y[x]*ratio,tabOR[i].blocage1X[x]*ratio-ratio,tabOR[i].blocage1Y[x]*ratio-ratio);
+				}
+				if(tabOR[i].blocage2==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabOR[i].blocage2X[x]*ratio,tabOR[i].blocage2Y[x]*ratio,tabOR[i].blocage2X[x]*ratio-ratio,tabOR[i].blocage2Y[x]*ratio-ratio);
+				}
 			}
 		}
 	}
@@ -360,113 +749,47 @@ void cercle(float centreX, float centreY, float rayon)
 				 centreX+rayon*cos(angle), centreY+rayon*sin(angle),
 				 centreX+rayon*cos(angle+PasAngulaire), centreY+rayon*sin(angle+PasAngulaire));
 	}
-	
 }
 
-void ModifierPositionCurseur(void)
-{
-	if (etatBoutonSouris() == GaucheAppuye || etatBoutonSouris() == DroiteAppuye)
-	{
-		if(abscisse>=largeurFenetre()*1468/1920 && abscisse<=largeurFenetre()*1647/1920)
-		{
-			if(ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080)
-			{
-				if(lignes2>5)
-				{
-					lignes2-=2;
-					colonnes2-=2;
-				}
-			}
-		}
-		else if(abscisse>=largeurFenetre()*1693/1920 && abscisse<=largeurFenetre()*1872/1920)
-		{
-			if(ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080)
-			{
-				if(lignes2<lignes_grilles)
-				{
-					lignes2+=2;
-					colonnes2+=2;
-				}
-			}
-		}
-
-	}
-}
 void AfficheBtnZoom(void)
 {
     couleurCourante(255,255,255);
-    rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
-    couleurCourante(0,0,0);
-    rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
-    couleurCourante(255,255,255);
     rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
     couleurCourante(0,0,0);
     rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
     couleurCourante(255,255,255);
     epaisseurDeTrait(5);
-    afficheChaine("+",60,largeurFenetre()*1535/1920,hauteurFenetre()*40/1080);
-    afficheChaine("-",60,largeurFenetre()*1760/1920,hauteurFenetre()*40/1080);
-    if(etatBtnZ==1){
-
-    couleurCourante(0 ,0 ,0);
-
-    rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
-
+    ligne(largeurFenetre()*1740/1920,hauteurFenetre()*30/1080,largeurFenetre()*1775/1920,hauteurFenetre()*57/1080);
+    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,20);
+    couleurCourante(0,0,0);
+    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,16);
     couleurCourante(255,255,255);
-    
-    rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
-
-    couleurCourante(0 ,0 ,0);
-
-    epaisseurDeTrait(5);
-
-    afficheChaine("+",60,largeurFenetre()*1535/1920,hauteurFenetre()*40/1080);
+    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,12);
+    couleurCourante(0,0,0);
+    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,10);
+    couleurCourante(100,255,255);
+    epaisseurDeTrait(3);
+    afficheChaine("+",25,largeurFenetre()*1785/1920,hauteurFenetre()*60/1080);
+    if(etatZoom==1)
+    {
+    	couleurCourante(0,0,0);
+	    rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
+	    couleurCourante(255,255,255);
+	    rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
+	    couleurCourante(0,0,0);
+	    epaisseurDeTrait(5);
+	    ligne(largeurFenetre()*1740/1920,hauteurFenetre()*30/1080,largeurFenetre()*1775/1920,hauteurFenetre()*57/1080);
+	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,20);
+	    couleurCourante(255,255,255);
+	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,16);
+	    couleurCourante(0,0,0);
+	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,12);
+	    couleurCourante(255,255,255);
+	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,10);
+	    couleurCourante(100,255,255);
+	    epaisseurDeTrait(3);
+	    afficheChaine("+",25,largeurFenetre()*1785/1920,hauteurFenetre()*60/1080);
     }
-    else if(etatBtnZ==2){
-
-    couleurCourante(0 ,0 ,0);
-
-    rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
-
-    couleurCourante(255,255,255);
-
-    rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
-
-    couleurCourante(0 ,0 ,0);
-
-    epaisseurDeTrait(5);
-
-    afficheChaine("-",60,largeurFenetre()*1760/1920,hauteurFenetre()*40/1080);
-    }
-
-}
-
-void RetirerCase(float lignes2,float colonnes2)
-{
-	float x = abscisse;
-	float y = ordonnee;
-	int ligneX=0;
-	int colonneY=0;
-	for(int i=0;i<lignes2+2;i++)
-	{
-		if(ratio*(i+deplacementX)>x)
-		{
-			ligneX=i;
-			break;
-		}
-	}
-	for(int j=0;j<colonnes2+2;j++)
-	{
-		if(ratio*(j+deplacementY)>y)
-		{
-			colonneY=j;
-			break;
-		}
-	}
-	if(grille[ligneX][colonneY]==1)
-	{
-		grille[ligneX][colonneY]=0;
-	}
 }
 
 void AfficheBtnLecture(void)
@@ -509,9 +832,9 @@ void InitialisationGrillet1(void)
 
 void RemplirGrillet1(void)
 {
-	for(int i=0;i<lignes_grilles+1;i++)
+	for(int i=0;i<lignes_grilles;i++)
 	{
-		for(int j=0;j<colonnes_grilles+1;j++)
+		for(int j=0;j<colonnes_grilles;j++)
 		{
 			int nombre_voisin_vivant=ScanCellules(i,j);
 			ReglesConway(nombre_voisin_vivant,i,j);
@@ -757,7 +1080,59 @@ void AffichageGrillet1(float lignes2,float colonnes2)
 			if(grillet1[i][j]==1)
 			{
 				couleurCourante(0,145,255);
-				rectangle((i+deplacementX)*ratio,(j+deplacementY)*ratio,(i+deplacementX)*ratio-ratio,(j+deplacementY)*ratio-ratio);
+				rectangle((i)*ratio,(j)*ratio,(i)*ratio-ratio,(j)*ratio-ratio);
+			}
+		}
+	}
+	if(longueurtabNOT>0)
+	{
+		for(int i=0;i<longueurtabNOT;i++)
+		{
+			for(int x=0;x<7;x++)
+			{
+				if(tabNOT[i].blocage==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabNOT[i].blocageX[x]*ratio,tabNOT[i].blocageY[x]*ratio,tabNOT[i].blocageX[x]*ratio-ratio,tabNOT[i].blocageY[x]*ratio-ratio);
+				}
+			}
+		}
+	}
+	if(longueurtabAND>0)
+	{
+		for(int i=0;i<longueurtabAND;i++)
+		{
+			for(int x=0;x<7;x++)
+			{
+				if(tabAND[i].blocage1==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabAND[i].blocage1X[x]*ratio,tabAND[i].blocage1Y[x]*ratio,tabAND[i].blocage1X[x]*ratio-ratio,tabAND[i].blocage1Y[x]*ratio-ratio);
+				}
+				if(tabAND[i].blocage2==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabAND[i].blocage2X[x]*ratio,tabAND[i].blocage2Y[x]*ratio,tabAND[i].blocage2X[x]*ratio-ratio,tabAND[i].blocage2Y[x]*ratio-ratio);
+				}	
+			}
+		}
+	}
+	if(longueurtabOR>0)
+	{
+		for(int i=0;i<longueurtabOR;i++)
+		{
+			for(int x=0;x<7;x++)
+			{
+				if(tabOR[i].blocage1==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabOR[i].blocage1X[x]*ratio,tabOR[i].blocage1Y[x]*ratio,tabOR[i].blocage1X[x]*ratio-ratio,tabOR[i].blocage1Y[x]*ratio-ratio);
+				}
+				if(tabOR[i].blocage2==1)
+				{
+					couleurCourante(0,255,0);
+					rectangle(tabOR[i].blocage2X[x]*ratio,tabOR[i].blocage2Y[x]*ratio,tabOR[i].blocage2X[x]*ratio-ratio,tabOR[i].blocage2Y[x]*ratio-ratio);
+				}	
 			}
 		}
 	}
@@ -850,18 +1225,17 @@ void AffichePointInterrogation(void)
 			epaisseurDeTrait(10);
 			ligne(largeurFenetre()*0.66,hauteurFenetre()*170/1080,largeurFenetre()*0.57,hauteurFenetre()*170/1080);
 			epaisseurDeTrait(2);
-			afficheChaine("Changer la temporisation",40,largeurFenetre()*700/1920,hauteurFenetre()*460/1080);
+			afficheChaine("Changer la temporisation",40,largeurFenetre()*0.49,hauteurFenetre()*440/1080);
 			// Point d'intérrogation
 		}
 		if (pagemenu==2)
 		{
-			couleurCourante(255,255,255);
 			afficheChaine("Pour ajouter des cellules vivantes",40,largeurFenetre()*390/1920,hauteurFenetre()*796/1080);
 			rectangle(largeurFenetre()*258/1920,hauteurFenetre()*840/1080,largeurFenetre()*350/1920,hauteurFenetre()*750/1080);
 			couleurCourante(0,0,0);
 			rectangle(largeurFenetre()*258/1920+5,hauteurFenetre()*840/1080-5,largeurFenetre()*304/1920,hauteurFenetre()*820/1080);
 			ligne(largeurFenetre()*258/1920,hauteurFenetre()*820/1080,largeurFenetre()*350/1920,hauteurFenetre()*820/1080);
-			ligne(largeurFenetre()*304/1920,hauteurFenetre()*840/1080,largeurFenetre()*304/1920,hauteurFenetre()*820/1080);	
+			ligne(largeurFenetre()*304/1920,hauteurFenetre()*840/1080,largeurFenetre()*304/1920,hauteurFenetre()*820/1080);
 			couleurCourante(255,255,255);
 			afficheChaine("Pour tuer les cellules",40,largeurFenetre()*390/1920,hauteurFenetre()*646/1080);
 			rectangle(largeurFenetre()*258/1920,hauteurFenetre()*690/1080,largeurFenetre()*350/1920,hauteurFenetre()*600/1080);
@@ -869,42 +1243,7 @@ void AffichePointInterrogation(void)
 			rectangle(largeurFenetre()*304/1920,hauteurFenetre()*690/1080-5,largeurFenetre()*350/1920-5,hauteurFenetre()*670/1080);
 			ligne(largeurFenetre()*258/1920,hauteurFenetre()*670/1080,largeurFenetre()*350/1920,hauteurFenetre()*670/1080);
 			ligne(largeurFenetre()*304/1920,hauteurFenetre()*690/1080,largeurFenetre()*304/1920,hauteurFenetre()*670/1080);
-			
 			couleurCourante(255,255,255);
-			rectangle(largeurFenetre()*258/1920,hauteurFenetre()*540/1080,largeurFenetre()*350/1920,hauteurFenetre()*450/1080);	
-			couleurCourante(0,0,0);
-			epaisseurDeTrait(5);
-			afficheChaine("+",40,largeurFenetre()*287.5/1920,hauteurFenetre()*477/1080);
-			couleurCourante(255,255,255);
-			epaisseurDeTrait(2);
-			afficheChaine("Pour zoomer sur la grille",40,largeurFenetre()*390/1920,hauteurFenetre()*477/1080);
-			
-			couleurCourante(255,255,255);
-			rectangle(largeurFenetre()*258/1920,hauteurFenetre()*371/1080,largeurFenetre()*350/1920,hauteurFenetre()*281/1080);	
-			couleurCourante(0,0,0);
-			epaisseurDeTrait(5);
-			afficheChaine("-",40,largeurFenetre()*287.5/1920,hauteurFenetre()*308/1080);
-			couleurCourante(255,255,255);
-			epaisseurDeTrait(2);
-			afficheChaine("Pour dezoomer de la grille",40,largeurFenetre()*390/1920,hauteurFenetre()*308/1080);
-			
-			ligne(largeurFenetre()*1130/1920,hauteurFenetre()*250/1080,largeurFenetre()*1130/1920,hauteurFenetre()*850/1080);
-			// Pour les touches
-			couleurCourante(255,255,255);
-			rectangle(largeurFenetre()*1160/1920,hauteurFenetre()*835/1080,largeurFenetre()*1200/1920,hauteurFenetre()*780/1080);	
-			rectangle(largeurFenetre()*1160/1920,hauteurFenetre()*685/1080,largeurFenetre()*1200/1920,hauteurFenetre()*630/1080);	
-			rectangle(largeurFenetre()*1160/1920,hauteurFenetre()*520/1080,largeurFenetre()*1200/1920,hauteurFenetre()*450/1080);
-			rectangle(largeurFenetre()*1160/1920,hauteurFenetre()*355/1080,largeurFenetre()*1200/1920,hauteurFenetre()*300/1080);
-			afficheChaine("Aller en haut",40,largeurFenetre()*1230/1920,hauteurFenetre()*796/1080);
-			afficheChaine("Aller en bas",40,largeurFenetre()*1230/1920,hauteurFenetre()*646/1080);
-			afficheChaine("Aller a gauche",40,largeurFenetre()*1230/1920,hauteurFenetre()*477/1080);
-			afficheChaine("Aller a droite",40,largeurFenetre()*1230/1920,hauteurFenetre()*308/1080);
-			couleurCourante(0,0,0);
-			epaisseurDeTrait(2);
-			afficheChaine("z",40,largeurFenetre()*1170/1920,hauteurFenetre()*796/1080);	
-			afficheChaine("s",40,largeurFenetre()*1170/1920,hauteurFenetre()*646/1080);
-			afficheChaine("q",40,largeurFenetre()*1170/1920,hauteurFenetre()*477/1080);
-			afficheChaine("d",40,largeurFenetre()*1170/1920,hauteurFenetre()*308/1080);				
 		}
 		if (pagemenu==3)
 		{
@@ -923,7 +1262,7 @@ void AffichePointInterrogation(void)
 		rectangle(largeurFenetre()*30/1920,hauteurFenetre()*10/1080,largeurFenetre()*180/1920,hauteurFenetre()*120/1080);
 		couleurCourante(0,0,0);
 		rectangle(largeurFenetre()*32/1920,hauteurFenetre()*12/1080,largeurFenetre()*178/1920,hauteurFenetre()*118/1080);
-		// Point d'intérrogation
+		// Point d'interrogation
 		couleurCourante(255,255,255);
 	}
 	rectangle(largeurFenetre()*95/1920,hauteurFenetre()*25/1080,largeurFenetre()*110/1920,hauteurFenetre()*35/1080); // Point du bas
@@ -936,14 +1275,8 @@ void AffichePointInterrogation(void)
 
 void ResetGrille(void)
 {
-	for(int i=0;i<lignes_grilles;i++)
-	{
-		for(int j=0;j<colonnes_grilles;j++)
-		{
-			grille[i][j]=0;
-			grillet1[i][j]=0;
-		}
-	}
+	reset=1;
+	InitialisationGrille();
 }
 
 void AfficheBtnLectureHover(void)
@@ -955,7 +1288,6 @@ void AfficheBtnLectureHover(void)
 		couleurCourante(255,255,255);
 		cercle(largeurFenetre()*390/1920,hauteurFenetre()*66/1080,42); // Cercle intérieur noir
 		couleurCourante(0,0,0);
-		
 		if(etat == 1){ // Bouton Pause
 			rectangle(largeurFenetre()*370/1920,hauteurFenetre()*85/1080,largeurFenetre()*385/1920,hauteurFenetre()*47/1080); // rectangle gauche
 			rectangle(largeurFenetre()*395/1920,hauteurFenetre()*85/1080,largeurFenetre()*410/1920,hauteurFenetre()*47/1080); // rectangle droit
@@ -969,7 +1301,7 @@ void AfficheBtnLectureHover(void)
 
 void AfficheBtnResetHover(void)
 {
-	if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45)
+	if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45 && reset==1)
 	{
 		couleurCourante(0,0,0); 
 		cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,45); // Cercle Pause
@@ -1006,7 +1338,6 @@ void AffichePointInterrogationHover(void)
 		rectangle(largeurFenetre()*85/1920,hauteurFenetre()*95/1080,largeurFenetre()*125/1920,hauteurFenetre()*105/1080); // Partie du haut
 		rectangle(largeurFenetre()*70/1920,hauteurFenetre()*85/1080,largeurFenetre()*85/1920,hauteurFenetre()*95/1080); // Partie de droite
 	}
-	
 }
 
 void AfficheBtnRadio(int btnRad){
@@ -1021,10 +1352,7 @@ void AfficheBtnRadio(int btnRad){
 	afficheChaine("x2", 50, largeurFenetre()*0.48, hauteurFenetre()*0.06);
 	afficheChaine("x4", 50, largeurFenetre()*0.56, hauteurFenetre()*0.06);
 	afficheChaine("x8", 50, largeurFenetre()*0.65, hauteurFenetre()*0.06);
-	//
 	couleurCourante(255,0,0);
-	
-	//
 	couleurCourante(0, 0, 0);
 	if(btnRad==1){
 		couleurCourante(255, 0, 0);
@@ -1074,8 +1402,6 @@ void boutongauche(int boutong)
 	}
 }
 
-
-
 void boutondroite(int boutond)
 {	
 	if (boutond==1)
@@ -1102,16 +1428,379 @@ void boutondroite(int boutond)
 	}
 }
 
-void Dezoom(int *lignes, int *colonnes){
-	if(*lignes<=491){
-		*lignes=*lignes+10;
-		*colonnes=*colonnes+10;
+void GosperGliderGunDroite(int initX, int initY)
+{
+	grille[initX][initY]=1;
+	grille[initX+1][initY]=1;
+	grille[initX+1][initY-1]=1;
+	grille[initX][initY-1]=1;
+	grille[initX+10][initY]=1;
+	grille[initX+10][initY-1]=1;
+	grille[initX+10][initY-2]=1;
+	grille[initX+11][initY-3]=1;
+	grille[initX+12][initY-4]=1;
+	grille[initX+13][initY-4]=1;
+	grille[initX+15][initY-3]=1;
+	grille[initX+16][initY-2]=1;
+	grille[initX+16][initY-1]=1;
+	grille[initX+16][initY]=1;
+	grille[initX+17][initY-1]=1;
+	grille[initX+16][initY-2]=1;
+	grille[initX+15][initY+1]=1;
+	grille[initX+13][initY+2]=1;
+	grille[initX+12][initY+2]=1;
+	grille[initX+11][initY+1]=1;
+	grille[initX+14][initY-1]=1;
+	grille[initX+20][initY]=1;
+	grille[initX+21][initY]=1;
+	grille[initX+20][initY+1]=1;
+	grille[initX+21][initY+1]=1;
+	grille[initX+20][initY+2]=1;
+	grille[initX+21][initY+2]=1;
+	grille[initX+22][initY-1]=1;
+	grille[initX+22][initY+3]=1;
+	grille[initX+24][initY-1]=1;
+	grille[initX+24][initY+3]=1;
+	grille[initX+24][initY+4]=1;
+	grille[initX+24][initY-2]=1;
+	grille[initX+34][initY+1]=1;
+	grille[initX+35][initY+1]=1;
+	grille[initX+34][initY+2]=1;
+	grille[initX+35][initY+2]=1;
+}
+
+void GosperGliderGunGauche(int initX, int initY)
+{
+	grille[initX][initY]=1;
+	grille[initX+1][initY]=1;
+	grille[initX][initY-1]=1;
+	grille[initX+1][initY-1]=1;
+	grille[initX+11][initY+1]=1;
+	grille[initX+11][initY+2]=1;
+	grille[initX+11][initY-3]=1;
+	grille[initX+11][initY-4]=1;
+	grille[initX+13][initY+1]=1;
+	grille[initX+13][initY-3]=1;
+	grille[initX+14][initY]=1;
+	grille[initX+14][initY-1]=1;
+	grille[initX+14][initY-2]=1;
+	grille[initX+15][initY]=1;
+	grille[initX+15][initY-1]=1;
+	grille[initX+15][initY-2]=1;
+	grille[initX+18][initY-3]=1;
+	grille[initX+19][initY-3]=1;
+	grille[initX+19][initY-2]=1;
+	grille[initX+19][initY-4]=1;
+	grille[initX+20][initY-1]=1;
+	grille[initX+20][initY-5]=1;
+	grille[initX+21][initY-3]=1;
+	grille[initX+22][initY]=1;
+	grille[initX+23][initY]=1;
+	grille[initX+22][initY-6]=1;
+	grille[initX+23][initY-6]=1;
+	grille[initX+24][initY-1]=1;
+	grille[initX+24][initY-5]=1;
+	grille[initX+25][initY-2]=1;
+	grille[initX+25][initY-3]=1;
+	grille[initX+25][initY-4]=1;
+	grille[initX+34][initY-2]=1;
+	grille[initX+35][initY-2]=1;
+	grille[initX+34][initY-3]=1;
+	grille[initX+35][initY-3]=1;
+}
+
+void LogicGateNOT(int initX,int initY,int blocage)
+{
+	tabNOT[longueurtabNOT].X=initX;
+	tabNOT[longueurtabNOT].Y=initY;
+	tabNOT[longueurtabNOT].rectXinit=initX-4;
+	tabNOT[longueurtabNOT].rectYinit=initY-20;
+	tabNOT[longueurtabNOT].rectXfin=initX+80;
+	tabNOT[longueurtabNOT].rectYfin=initY+7;
+	tabNOT[longueurtabNOT].blocage=blocage;
+	tabNOT[longueurtabNOT].blocageX[0]=initX+23;
+	tabNOT[longueurtabNOT].blocageX[1]=initX+24;
+	tabNOT[longueurtabNOT].blocageX[2]=initX+23;
+	tabNOT[longueurtabNOT].blocageX[3]=initX+24;
+	tabNOT[longueurtabNOT].blocageX[4]=initX+25;
+	tabNOT[longueurtabNOT].blocageX[5]=initX+26;
+	tabNOT[longueurtabNOT].blocageX[6]=initX+26;
+	tabNOT[longueurtabNOT].blocageY[0]=initY-6;
+	tabNOT[longueurtabNOT].blocageY[1]=initY-6;
+	tabNOT[longueurtabNOT].blocageY[2]=initY-7;
+	tabNOT[longueurtabNOT].blocageY[3]=initY-8;
+	tabNOT[longueurtabNOT].blocageY[4]=initY-8;
+	tabNOT[longueurtabNOT].blocageY[5]=initY-8;
+	tabNOT[longueurtabNOT].blocageY[6]=initY-9;
+	longueurtabNOT++;
+	GosperGliderGunDroite(initX, initY);
+	GosperGliderGunGauche(initX+40,initY-11);
+	if(blocage==1)
+	{
+		grille[initX+23][initY-6]=1;
+		grille[initX+24][initY-6]=1;
+		grille[initX+23][initY-7]=1;
+		grille[initX+24][initY-8]=1;
+		grille[initX+25][initY-8]=1;
+		grille[initX+26][initY-8]=1;
+		grille[initX+26][initY-9]=1;
 	}
 }
 
-void Zoom(int *lignes, int *colonnes){
-	if(*lignes>=11){
-		*lignes=*lignes-10;
-		*colonnes=*colonnes-10;
+void LogicGateAND(int initX,int initY,int blocage1,int blocage2)
+{
+	tabAND[longueurtabAND].X=initX-52;
+	tabAND[longueurtabAND].Y=initY;
+	tabAND[longueurtabAND].rectXinit=initX-55;
+	tabAND[longueurtabAND].rectYinit=initY-67;
+	tabAND[longueurtabAND].rectXfin=initX+80;
+	tabAND[longueurtabAND].rectYfin=initY+7;
+	tabAND[longueurtabAND].blocage1=blocage1;
+	tabAND[longueurtabAND].blocage2=blocage2;
+	tabAND[longueurtabAND].blocage1X[0]=initX-29;
+	tabAND[longueurtabAND].blocage1X[1]=initX-28;
+	tabAND[longueurtabAND].blocage1X[2]=initX-29;
+	tabAND[longueurtabAND].blocage1X[3]=initX-28;
+	tabAND[longueurtabAND].blocage1X[4]=initX-27;
+	tabAND[longueurtabAND].blocage1X[5]=initX-26;
+	tabAND[longueurtabAND].blocage1X[6]=initX-26;
+	tabAND[longueurtabAND].blocage1Y[0]=initY-6;
+	tabAND[longueurtabAND].blocage1Y[1]=initY-6;
+	tabAND[longueurtabAND].blocage1Y[2]=initY-7;
+	tabAND[longueurtabAND].blocage1Y[3]=initY-8;
+	tabAND[longueurtabAND].blocage1Y[4]=initY-8;
+	tabAND[longueurtabAND].blocage1Y[5]=initY-8;
+	tabAND[longueurtabAND].blocage1Y[6]=initY-9;
+	tabAND[longueurtabAND].blocage2X[0]=initX+23;
+	tabAND[longueurtabAND].blocage2X[1]=initX+24;
+	tabAND[longueurtabAND].blocage2X[2]=initX+23;
+	tabAND[longueurtabAND].blocage2X[3]=initX+24;
+	tabAND[longueurtabAND].blocage2X[4]=initX+25;
+	tabAND[longueurtabAND].blocage2X[5]=initX+26;
+	tabAND[longueurtabAND].blocage2X[6]=initX+26;
+	tabAND[longueurtabAND].blocage2Y[0]=initY-6;
+	tabAND[longueurtabAND].blocage2Y[1]=initY-6;
+	tabAND[longueurtabAND].blocage2Y[2]=initY-7;
+	tabAND[longueurtabAND].blocage2Y[3]=initY-8;
+	tabAND[longueurtabAND].blocage2Y[4]=initY-8;
+	tabAND[longueurtabAND].blocage2Y[5]=initY-8;
+	tabAND[longueurtabAND].blocage2Y[6]=initY-9;
+	grille[initX+10][initY-60]=1;
+	grille[initX+10][initY-61]=1;
+	grille[initX+9][initY-60]=1;
+	grille[initX+8][initY-61]=1;
+	grille[initX+8][initY-62]=1;
+	grille[initX+8][initY-63]=1;
+	grille[initX+7][initY-63]=1;
+	longueurtabAND++;
+	GosperGliderGunDroite(initX, initY);
+	GosperGliderGunGauche(initX+40,initY-11);
+	if(blocage2==1)
+	{
+		grille[initX+23][initY-6]=1;
+		grille[initX+24][initY-6]=1;
+		grille[initX+23][initY-7]=1;
+		grille[initX+24][initY-8]=1;
+		grille[initX+25][initY-8]=1;
+		grille[initX+26][initY-8]=1;
+		grille[initX+26][initY-9]=1;
 	}
+	GosperGliderGunDroite(initX-52,initY);
+	if(blocage1==1)
+	{
+		grille[initX-29][initY-6]=1;
+		grille[initX-28][initY-6]=1;
+		grille[initX-29][initY-7]=1;
+		grille[initX-28][initY-8]=1;
+		grille[initX-27][initY-8]=1;
+		grille[initX-26][initY-8]=1;
+		grille[initX-26][initY-9]=1;
+	}
+}
+
+void LogicGateOR(int initX,int initY,int blocage1,int blocage2)
+{
+	tabOR[longueurtabOR].X=initX-82;
+	tabOR[longueurtabOR].Y=initY;
+	tabOR[longueurtabOR].rectXinit=initX-85;
+	tabOR[longueurtabOR].rectYinit=initY-84;
+	tabOR[longueurtabOR].rectXfin=initX+100;
+	tabOR[longueurtabOR].rectYfin=initY+7;
+	tabOR[longueurtabOR].blocage1=blocage1;
+	tabOR[longueurtabOR].blocage2=blocage2;
+	tabOR[longueurtabOR].blocage1X[0]=initX-17;
+	tabOR[longueurtabOR].blocage1X[1]=initX-16;
+	tabOR[longueurtabOR].blocage1X[2]=initX-17;
+	tabOR[longueurtabOR].blocage1X[3]=initX-16;
+	tabOR[longueurtabOR].blocage1X[4]=initX-15;
+	tabOR[longueurtabOR].blocage1X[5]=initX-14;
+	tabOR[longueurtabOR].blocage1X[6]=initX-14;
+	tabOR[longueurtabOR].blocage1Y[0]=initY-7;
+	tabOR[longueurtabOR].blocage1Y[1]=initY-7;
+	tabOR[longueurtabOR].blocage1Y[2]=initY-8;
+	tabOR[longueurtabOR].blocage1Y[3]=initY-9;
+	tabOR[longueurtabOR].blocage1Y[4]=initY-9;
+	tabOR[longueurtabOR].blocage1Y[5]=initY-9;
+	tabOR[longueurtabOR].blocage1Y[6]=initY-10;
+	tabOR[longueurtabOR].blocage2X[0]=initX+37;
+	tabOR[longueurtabOR].blocage2X[1]=initX+38;
+	tabOR[longueurtabOR].blocage2X[2]=initX+37;
+	tabOR[longueurtabOR].blocage2X[3]=initX+38;
+	tabOR[longueurtabOR].blocage2X[4]=initX+39;
+	tabOR[longueurtabOR].blocage2X[5]=initX+40;
+	tabOR[longueurtabOR].blocage2X[6]=initX+40;
+	tabOR[longueurtabOR].blocage2Y[0]=initY-6;
+	tabOR[longueurtabOR].blocage2Y[1]=initY-6;
+	tabOR[longueurtabOR].blocage2Y[2]=initY-7;
+	tabOR[longueurtabOR].blocage2Y[3]=initY-8;
+	tabOR[longueurtabOR].blocage2Y[4]=initY-8;
+	tabOR[longueurtabOR].blocage2Y[5]=initY-8;
+	tabOR[longueurtabOR].blocage2Y[6]=initY-9;
+	grille[initX+40][initY-64]=1;
+	grille[initX+41][initY-64]=1;
+	grille[initX+40][initY-65]=1;
+	grille[initX+41][initY-66]=1;
+	grille[initX+42][initY-66]=1;
+	grille[initX+43][initY-66]=1;
+	grille[initX+43][initY-67]=1;
+	longueurtabOR++;
+	GosperGliderGunDroite(initX-82, initY);
+	GosperGliderGunDroite(initX-40,initY-1);
+	if(blocage2==1)
+	{
+		grille[initX+37][initY-6]=1;
+		grille[initX+38][initY-6]=1;
+		grille[initX+37][initY-7]=1;
+		grille[initX+38][initY-8]=1;
+		grille[initX+39][initY-8]=1;
+		grille[initX+40][initY-8]=1;
+		grille[initX+40][initY-9]=1;
+	}
+	GosperGliderGunDroite(initX+14,initY);
+	GosperGliderGunGauche(initX+59,initY+3);
+	if(blocage1==1)
+	{
+		grille[initX-17][initY-7]=1;
+		grille[initX-16][initY-7]=1;
+		grille[initX-17][initY-8]=1;
+		grille[initX-16][initY-9]=1;
+		grille[initX-15][initY-9]=1;
+		grille[initX-14][initY-9]=1;
+		grille[initX-14][initY-10]=1;
+	}
+}
+
+void afficherRectangleZoom(void)
+{
+	couleurCourante(0, 184, 15);
+	if(etatBoutonSouris()==GaucheAppuye)
+	{
+		rectangle(clicBasX,clicBasY,clicHautX,clicHautY);
+	}
+}
+
+void AffichageBoutonGrille(void)
+{
+    couleurCourante(255,255,255);
+    rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
+    couleurCourante(0,0,0);
+    rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
+    couleurCourante(200,200,200);
+    rectangle(largeurFenetre()*1488/1920,hauteurFenetre()*23/1080,largeurFenetre()*1627/1920,hauteurFenetre()*105/1080);
+	couleurCourante(0,0,0);
+    rectangle(largeurFenetre()*1490/1920,hauteurFenetre()*25/1080,largeurFenetre()*1625/1920,hauteurFenetre()*102/1080);
+    couleurCourante(130,130,130);
+    epaisseurDeTrait(5);
+    ligne(largeurFenetre()*1500/1920,hauteurFenetre()*25/1080,largeurFenetre()*1500/1920,hauteurFenetre()*102/1080);
+	ligne(largeurFenetre()*1520/1920,hauteurFenetre()*25/1080,largeurFenetre()*1520/1920,hauteurFenetre()*102/1080);
+    ligne(largeurFenetre()*1540/1920,hauteurFenetre()*25/1080,largeurFenetre()*1540/1920,hauteurFenetre()*102/1080);
+    ligne(largeurFenetre()*1560/1920,hauteurFenetre()*25/1080,largeurFenetre()*1560/1920,hauteurFenetre()*102/1080);
+    ligne(largeurFenetre()*1580/1920,hauteurFenetre()*25/1080,largeurFenetre()*1580/1920,hauteurFenetre()*102/1080);
+    ligne(largeurFenetre()*1600/1920,hauteurFenetre()*25/1080,largeurFenetre()*1600/1920,hauteurFenetre()*102/1080);
+    ligne(largeurFenetre()*1620/1920,hauteurFenetre()*25/1080,largeurFenetre()*1620/1920,hauteurFenetre()*102/1080);
+    ligne(largeurFenetre()*1491/1920,hauteurFenetre()*35/1080,largeurFenetre()*1624/1920,hauteurFenetre()*35/1080);
+    ligne(largeurFenetre()*1491/1920,hauteurFenetre()*55/1080,largeurFenetre()*1624/1920,hauteurFenetre()*55/1080);
+    ligne(largeurFenetre()*1491/1920,hauteurFenetre()*75/1080,largeurFenetre()*1624/1920,hauteurFenetre()*75/1080);
+    ligne(largeurFenetre()*1491/1920,hauteurFenetre()*95/1080,largeurFenetre()*1624/1920,hauteurFenetre()*95/1080);
+}
+
+void AfficheFlecheDroite(void){
+	epaisseurDeTrait(5);
+	couleurCourante(255,255,255);
+	triangle(largeurFenetre()*1911/1920,hauteurFenetre()*65/1080,largeurFenetre()*1902/1920,hauteurFenetre()*50/1080,largeurFenetre()*1902/1920,hauteurFenetre()*80/1080);
+}
+
+void AfficheFlecheGauche(void){
+	epaisseurDeTrait(5);
+	couleurCourante(255,255,255);
+	triangle(largeurFenetre()*9/1920,hauteurFenetre()*65/1080,largeurFenetre()*18/1920,hauteurFenetre()*50/1080,largeurFenetre()*18/1920,hauteurFenetre()*80/1080);
+}
+
+void AfficheLogicGateNOT(void){
+    if (NotOnOff == 0)
+    {
+        couleurCourante(255,255,255);
+        rectangle(largeurFenetre()*30/1920, hauteurFenetre()*10/1080, largeurFenetre()*205/1920, hauteurFenetre()*120/1080);
+        couleurCourante(0,0,0);
+        rectangle(largeurFenetre()*32/1920, hauteurFenetre()*12/1080, largeurFenetre()*203/1920, hauteurFenetre()*118/1080);
+        couleurCourante(255,255,255);
+        epaisseurDeTrait(3);
+        afficheChaine("NOT", 50, largeurFenetre()*65/1920, hauteurFenetre()*45/1080);    
+    }
+    else if (NotOnOff == 1)
+    {
+        couleurCourante(0,0,0);
+        rectangle(largeurFenetre()*30/1920, hauteurFenetre()*10/1080, largeurFenetre()*205/1920, hauteurFenetre()*120/1080);
+        couleurCourante(255,255,255);
+        rectangle(largeurFenetre()*32/1920, hauteurFenetre()*12/1080, largeurFenetre()*203/1920, hauteurFenetre()*118/1080);
+        couleurCourante(0,0,0);
+        epaisseurDeTrait(3);
+        afficheChaine("NOT", 50, largeurFenetre()*65/1920, hauteurFenetre()*45/1080);    
+    }
+}
+
+void AfficheLogicGateAND(void){
+    if ( AndOnOff == 0)
+    {
+        couleurCourante(255,255,255);
+        rectangle(largeurFenetre()*251/1920, hauteurFenetre()*10/1080, largeurFenetre()*424/1920, hauteurFenetre()*120/1080);
+        couleurCourante(0,0,0);
+        rectangle(largeurFenetre()*253/1920, hauteurFenetre()*12/1080, largeurFenetre()*422/1920, hauteurFenetre()*118/1080);
+        couleurCourante(255,255,255);
+        epaisseurDeTrait(3);
+        afficheChaine("AND", 50, largeurFenetre()*285/1920, hauteurFenetre()*45/1080);    
+    }
+    else if ( AndOnOff == 1)
+    {
+        couleurCourante(0,0,0);
+        rectangle(largeurFenetre()*251/1920, hauteurFenetre()*10/1080, largeurFenetre()*424/1920, hauteurFenetre()*120/1080);
+        couleurCourante(255,255,255);
+        rectangle(largeurFenetre()*253/1920, hauteurFenetre()*12/1080, largeurFenetre()*422/1920, hauteurFenetre()*118/1080);
+        couleurCourante(0,0,0);
+        epaisseurDeTrait(3);
+        afficheChaine("AND", 50, largeurFenetre()*285/1920, hauteurFenetre()*45/1080);    
+    }
+}
+
+void AfficheLogicGateOR(void){
+    if ( OrOnOff == 0)
+    {
+        couleurCourante(255,255,255);
+        rectangle(largeurFenetre()*470/1920, hauteurFenetre()*10/1080, largeurFenetre()*643/1920, hauteurFenetre()*120/1080);
+        couleurCourante(0,0,0);
+        rectangle(largeurFenetre()*472/1920, hauteurFenetre()*12/1080, largeurFenetre()*641/1920, hauteurFenetre()*118/1080);
+        couleurCourante(255,255,255);
+        epaisseurDeTrait(3);
+        afficheChaine("OR", 50, largeurFenetre()*515/1920, hauteurFenetre()*45/1080);    
+    }
+    else if ( OrOnOff == 1)
+    {
+        couleurCourante(0,0,0);
+        rectangle(largeurFenetre()*470/1920, hauteurFenetre()*10/1080, largeurFenetre()*643/1920, hauteurFenetre()*120/1080);
+        couleurCourante(255,255,255);
+        rectangle(largeurFenetre()*472/1920, hauteurFenetre()*12/1080, largeurFenetre()*641/1920, hauteurFenetre()*118/1080);
+        couleurCourante(0,0,0);
+        epaisseurDeTrait(3);
+        afficheChaine("OR", 50, largeurFenetre()*515/1920, hauteurFenetre()*45/1080);    
+    }
 }
