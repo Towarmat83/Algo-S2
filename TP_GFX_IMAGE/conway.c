@@ -25,7 +25,6 @@ void gestionEvenement(EvenementGfx evenement)
 {
 	abscisse = abscisseSouris();
 	ordonnee = ordonneeSouris();
-	printf("\nx : %f , y : %f",abscisse/ratio, ordonnee/ratio);
 	if(temp==limitetemp)
 	{
 		temp=0;
@@ -302,6 +301,11 @@ void gestionEvenement(EvenementGfx evenement)
 					{
 
 						etatZoom=1-etatZoom;
+						if(etatZoom==0)
+						{
+							lignes2=lignes_grilles;
+							colonnes2=colonnes_grilles;
+						}
 
 					}
 
