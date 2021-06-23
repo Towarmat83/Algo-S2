@@ -48,11 +48,11 @@ typedef struct DONNEESAND
 }DONNEESAND;
 
 int **grille=NULL;
-int lignes_grilles=600; // MAX=500
-int colonnes_grilles=600; // MAX=500
+int lignes_grilles=800; // MAX=600
+int colonnes_grilles=800; // MAX=600
 float curseur;
-float lignes2=600;
-float colonnes2=600;
+float lignes2=800;
+float colonnes2=800;
 int etat = 0;
 int **grillet1=NULL;
 int menu = 0;
@@ -64,7 +64,7 @@ int abscisse;
 int boutong=1;
 int boutond=1;
 int pagemenu=1;
-float ratio;
+float ratio=1920/800; // A changer !!
 DONNEESNOT *tabNOT=NULL;
 DONNEESOR *tabOR=NULL;
 DONNEESAND *tabAND=NULL;
@@ -74,15 +74,18 @@ int longueurtabAND=0;
 int reset=1;
 int etatZoom=0;
 int clicHautX=0;
-int clicBasX=600;
-int clicHautY=600;
+int clicBasX=1920;
+int clicHautY=1080;
 int clicBasY=0;
 int boutonGrille=0;
+int compteurZoom=0;
 int GrilleOnOff=0;
 int LoupeOnOff=0;
 int page = 0;
 int menu2 = 0;
-int menu3 = 0;
+int AndOnOff = 0;
+int NotOnOff = 0;
+int OrOnOff = 0;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -110,6 +113,7 @@ void AffichePointInterrogationHover(void);
 void AfficheBtnRadio(int btnRad);
 void boutongauche(int boutond);
 void boutondroite(int boutond);
+void AfficheBtnZoom(void);
 void GosperGliderGunDroite(int initX, int initY);
 void GosperGliderGunGauche(int initX, int initY);
 void LogicGateNOT(int initX,int initY,int blocage);
@@ -122,5 +126,8 @@ void AfficheFlecheDroite(void);
 void AfficheFlecheGauche(void);
 void AfficheBtnGrille(void);
 void AfficheBtnLoupe(void);
+void AfficheLogicGateNOT(void);
+void AfficheLogicGateAND(void);
+void AfficheLogicGateOR(void);
 
 #endif
