@@ -78,6 +78,11 @@ int clicBasX=600;
 int clicHautY=600;
 int clicBasY=0;
 int boutonGrille=0;
+int GrilleOnOff=0;
+int LoupeOnOff=0;
+int page = 0;
+int menu2 = 0;
+int menu3 = 0;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -105,7 +110,6 @@ void AffichePointInterrogationHover(void);
 void AfficheBtnRadio(int btnRad);
 void boutongauche(int boutond);
 void boutondroite(int boutond);
-void AfficheBtnZoom(void);
 void GosperGliderGunDroite(int initX, int initY);
 void GosperGliderGunGauche(int initX, int initY);
 void LogicGateNOT(int initX,int initY,int blocage);
@@ -114,6 +118,9 @@ void LogicGateOR(int initX,int initY,int blocage1,int blocage2);
 void InitialisationTableaux(void);
 void afficherRectangleZoom(void);
 void AffichageBoutonGrille(void);
-
+void AfficheFlecheDroite(void);
+void AfficheFlecheGauche(void);
+void AfficheBtnGrille(void);
+void AfficheBtnLoupe(void);
 
 #endif

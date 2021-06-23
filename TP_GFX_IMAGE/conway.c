@@ -49,22 +49,21 @@ void gestionEvenement(EvenementGfx evenement)
 				clicBasX=abscisseSouris();
 				clicBasY=ordonneeSouris();
 			}
-			/*
-			if (etatBoutonSouris() == GaucheAppuye)
-			{
-				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
-				{
-					SourisCase(lignes2,colonnes2);
-				}
-			}
-			if(etatBoutonSouris() == DroiteAppuye)
-			{
-				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
-				{
-					RetirerCase(lignes2,colonnes2);
-				}
+			//~ if (etatBoutonSouris() == GaucheAppuye)
+			//~ {
+				//~ if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
+				//~ {
+					//~ SourisCase(lignes2,colonnes2);
+				//~ }
+			//~ }
+			//~ if(etatBoutonSouris() == DroiteAppuye)
+			//~ {
+				//~ if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
+				//~ {
+					//~ RetirerCase(lignes2,colonnes2);
+				//~ }
 				
-			}*/
+			//~ }
 			rafraichisFenetre();
 			break;
 			
@@ -88,16 +87,21 @@ void gestionEvenement(EvenementGfx evenement)
 			}
 			epaisseurDeTrait(3);
 			AffichageMenu();
+			AfficheFlecheDroite();
+			AfficheFlecheGauche();
 			couleurCourante(255,255,255); 
-			AffichageBoutonGrille();
-			AfficheBtnLecture();
-			AfficheBtnReset();
-			AfficheBtnLectureHover();
-			AfficheBtnResetHover();
-			AffichePointInterrogation();
-			AffichePointInterrogationHover();
-			AfficheBtnRadio(btnRad);
-			AfficheBtnZoom();
+			if (page == 0){
+				AffichageBoutonGrille();
+				AfficheBtnLecture();
+				AfficheBtnReset();
+				AfficheBtnLectureHover();
+				AfficheBtnResetHover();
+				AffichePointInterrogation();
+				AffichePointInterrogationHover();
+				AfficheBtnRadio(btnRad);
+				AfficheBtnGrille();
+				AfficheBtnLoupe();
+			}	
 			break;
 			
 		case Clavier:
@@ -198,11 +202,22 @@ void gestionEvenement(EvenementGfx evenement)
 					pagemenu=1;
 				}
 				if(abscisse>=largeurFenetre()*1693/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1872/1920 && ordonnee<=hauteurFenetre()*122/1080){
-					
+					LoupeOnOff = 1 - LoupeOnOff;
 				}
 				if(abscisse>=largeurFenetre()*1468/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1647/1920 && ordonnee<=hauteurFenetre()*122/1080){
-					
+					GrilleOnOff = 1 - GrilleOnOff;
 				}
+				if(abscisse>=largeurFenetre()*5/1920 && ordonnee>=hauteurFenetre()*40/1080 && abscisse<=largeurFenetre()*25/1920 && ordonnee<=hauteurFenetre()*90/1080)
+				{
+					menu2 = 1 - menu2;
+					menu3 = 0;
+					page = 1 - page;
+				}
+				if(abscisse>=largeurFenetre()*1895/1920 && ordonnee>=hauteurFenetre()*40/1080 && abscisse<=largeurFenetre()*1915/1920 && ordonnee<=hauteurFenetre()*90/1080)
+				{
+					menu3 = 1 - menu3; 
+					menu2 = 0;
+					page = 1 - page; // fonctionne que pour 2 pages qui switch
 			}
 			if (etatBoutonSouris() == GaucheAppuye)
 			{
@@ -369,6 +384,7 @@ void gestionEvenement(EvenementGfx evenement)
 			break;
 	}
 }
+}
 
 void InitialiserLignesColonnesAffichage(void)
 {
@@ -503,14 +519,26 @@ void LibererMemoireGrille(void)
 
 void AffichageMenu(void)
 {
-	couleurCourante(0,255,0);
-	ligne(0,hauteurFenetre()*129.6/1080,largeurFenetre(),hauteurFenetre()*129.6/1080);
-	couleurCourante(0,0,0);
-	rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
-	couleurCourante(0,255,0);
-	ligne(largeurFenetre()*1420/1920,0,largeurFenetre()*1420/1920,hauteurFenetre()*129.6/1080);
-	ligne(largeurFenetre()*460/1920,0,largeurFenetre()*460/1920,hauteurFenetre()*129.6/1080);
-	couleurCourante(155,255,0);
+	if (page == 0)
+	{
+		couleurCourante(0,255,0);
+		ligne(0,hauteurFenetre()*129.6/1080,largeurFenetre(),hauteurFenetre()*129.6/1080);
+		couleurCourante(0,0,0);
+		rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
+		couleurCourante(0,255,0);
+		ligne(largeurFenetre()*1420/1920,0,largeurFenetre()*1420/1920,hauteurFenetre()*129.6/1080);
+		ligne(largeurFenetre()*460/1920,0,largeurFenetre()*460/1920,hauteurFenetre()*129.6/1080);
+		couleurCourante(155,255,0);
+	}
+	else if (page == 1)
+	{
+		couleurCourante(0,255,0);
+		ligne(0,hauteurFenetre()*129.6/1080,largeurFenetre(),hauteurFenetre()*129.6/1080);
+		couleurCourante(0,0,0);
+		rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
+		couleurCourante(255,255,255);
+		afficheChaine("menu 2",60,largeurFenetre()*1200/1920,hauteurFenetre()*40/1080);	
+	}
 }
 
 void AffichageGrille(float ligne2,float colonnes2)
@@ -683,58 +711,105 @@ void cercle(float centreX, float centreY, float rayon)
 	
 }
 
-void AfficheBtnZoom(void)
+void AfficheBtnGrille(void)
 {
-	/*
-    couleurCourante(255,255,255);
-    rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
-    couleurCourante(0,0,0);
-    rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
-    couleurCourante(255,255,255);
-    rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
-    couleurCourante(0,0,0);
-    rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
-    couleurCourante(255,255,255);
-    epaisseurDeTrait(5);
-    afficheChaine("+",60,largeurFenetre()*1535/1920,hauteurFenetre()*40/1080);
-    afficheChaine("-",60,largeurFenetre()*1760/1920,hauteurFenetre()*40/1080);
-	*/
-    couleurCourante(255,255,255);
-    rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
-    couleurCourante(0,0,0);
-    rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
-    couleurCourante(255,255,255);
-    epaisseurDeTrait(5);
-    ligne(largeurFenetre()*1740/1920,hauteurFenetre()*30/1080,largeurFenetre()*1775/1920,hauteurFenetre()*57/1080);
-    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,20);
-    couleurCourante(0,0,0);
-    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,16);
-    couleurCourante(255,255,255);
-    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,12);
-    couleurCourante(0,0,0);
-    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,10);
-    couleurCourante(100,255,255);
-    epaisseurDeTrait(3);
-    afficheChaine("+",25,largeurFenetre()*1785/1920,hauteurFenetre()*60/1080);
-    if(etatZoom==1)
+	// Afficher/Supprimer la grille
+	if (GrilleOnOff == 0)
+	{
+		couleurCourante(255,255,255);
+		rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
+		couleurCourante(0,0,0);
+		rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
+		couleurCourante(200,200,200);
+		rectangle(largeurFenetre()*1488/1920,hauteurFenetre()*23/1080,largeurFenetre()*1627/1920,hauteurFenetre()*105/1080);
+		couleurCourante(0,0,0);
+		rectangle(largeurFenetre()*1490/1920,hauteurFenetre()*25/1080,largeurFenetre()*1625/1920,hauteurFenetre()*102/1080);
+		couleurCourante(130,130,130);
+		epaisseurDeTrait(5);
+		ligne(largeurFenetre()*1500/1920,hauteurFenetre()*25/1080,largeurFenetre()*1500/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1520/1920,hauteurFenetre()*25/1080,largeurFenetre()*1520/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1540/1920,hauteurFenetre()*25/1080,largeurFenetre()*1540/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1560/1920,hauteurFenetre()*25/1080,largeurFenetre()*1560/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1580/1920,hauteurFenetre()*25/1080,largeurFenetre()*1580/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1600/1920,hauteurFenetre()*25/1080,largeurFenetre()*1600/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1620/1920,hauteurFenetre()*25/1080,largeurFenetre()*1620/1920,hauteurFenetre()*102/1080);
+		// ------------------------------------------------------------------------------------------------------------//
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*35/1080,largeurFenetre()*1624/1920,hauteurFenetre()*35/1080);
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*55/1080,largeurFenetre()*1624/1920,hauteurFenetre()*55/1080);
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*75/1080,largeurFenetre()*1624/1920,hauteurFenetre()*75/1080);
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*95/1080,largeurFenetre()*1624/1920,hauteurFenetre()*95/1080);
+	}
+	
+	else if(GrilleOnOff==1){
+		// Afficher/Supprimer la grille
+		couleurCourante(0,0,0);
+		rectangle(largeurFenetre()*1468/1920,hauteurFenetre()*8/1080,largeurFenetre()*1647/1920,hauteurFenetre()*122/1080);
+		couleurCourante(255,255,255);
+		rectangle(largeurFenetre()*1470/1920,hauteurFenetre()*10/1080,largeurFenetre()*1645/1920,hauteurFenetre()*120/1080);
+		couleurCourante(55,55,55);
+		rectangle(largeurFenetre()*1488/1920,hauteurFenetre()*23/1080,largeurFenetre()*1627/1920,hauteurFenetre()*105/1080);
+		couleurCourante(255,255,255);
+		rectangle(largeurFenetre()*1490/1920,hauteurFenetre()*25/1080,largeurFenetre()*1625/1920,hauteurFenetre()*102/1080);
+		couleurCourante(125,125,125);
+		epaisseurDeTrait(5);
+		ligne(largeurFenetre()*1500/1920,hauteurFenetre()*25/1080,largeurFenetre()*1500/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1520/1920,hauteurFenetre()*25/1080,largeurFenetre()*1520/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1540/1920,hauteurFenetre()*25/1080,largeurFenetre()*1540/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1560/1920,hauteurFenetre()*25/1080,largeurFenetre()*1560/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1580/1920,hauteurFenetre()*25/1080,largeurFenetre()*1580/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1600/1920,hauteurFenetre()*25/1080,largeurFenetre()*1600/1920,hauteurFenetre()*102/1080);
+		ligne(largeurFenetre()*1620/1920,hauteurFenetre()*25/1080,largeurFenetre()*1620/1920,hauteurFenetre()*102/1080);
+		// ------------------------------------------------------------------------------------------------------------//
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*35/1080,largeurFenetre()*1624/1920,hauteurFenetre()*35/1080);
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*55/1080,largeurFenetre()*1624/1920,hauteurFenetre()*55/1080);
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*75/1080,largeurFenetre()*1624/1920,hauteurFenetre()*75/1080);
+		ligne(largeurFenetre()*1491/1920,hauteurFenetre()*95/1080,largeurFenetre()*1624/1920,hauteurFenetre()*95/1080);  
+    }
+}
+
+void AfficheBtnLoupe(void)
+{
+	if (LoupeOnOff == 0)
     {
-    	couleurCourante(0,0,0);
-	    rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
-	    couleurCourante(255,255,255);
-	    rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
-	    couleurCourante(0,0,0);
-	    epaisseurDeTrait(5);
-	    ligne(largeurFenetre()*1740/1920,hauteurFenetre()*30/1080,largeurFenetre()*1775/1920,hauteurFenetre()*57/1080);
-	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,20);
-	    couleurCourante(255,255,255);
-	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,16);
-	    couleurCourante(0,0,0);
-	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,12);
-	    couleurCourante(255,255,255);
-	    cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,10);
-	    couleurCourante(100,255,255);
-	    epaisseurDeTrait(3);
-	    afficheChaine("+",25,largeurFenetre()*1785/1920,hauteurFenetre()*60/1080);
+		// Loupe
+		couleurCourante(255,255,255);
+		rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
+		couleurCourante(0,0,0);
+		rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
+		couleurCourante(255,255,255);
+		epaisseurDeTrait(5);
+		ligne(largeurFenetre()*1740/1920,hauteurFenetre()*30/1080,largeurFenetre()*1775/1920,hauteurFenetre()*57/1080);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,20);
+		couleurCourante(0,0,0);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,16);
+		couleurCourante(255,255,255);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,12);
+		couleurCourante(0,0,0);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,10);
+		couleurCourante(100,255,255);
+		epaisseurDeTrait(3);
+		afficheChaine("+",25,largeurFenetre()*1785/1920,hauteurFenetre()*60/1080);
+	}
+	
+	else if(LoupeOnOff == 1){
+		couleurCourante(0 ,0 ,0);
+		rectangle(largeurFenetre()*1693/1920,hauteurFenetre()*8/1080,largeurFenetre()*1872/1920,hauteurFenetre()*122/1080);
+		couleurCourante(255,255,255);
+		rectangle(largeurFenetre()*1695/1920,hauteurFenetre()*10/1080,largeurFenetre()*1870/1920,hauteurFenetre()*120/1080);
+		couleurCourante(0 ,0 ,0);	
+		// Loupe
+		epaisseurDeTrait(5);
+		ligne(largeurFenetre()*1740/1920,hauteurFenetre()*30/1080,largeurFenetre()*1775/1920,hauteurFenetre()*57/1080);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,20);
+		couleurCourante(255,255,255);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,16);
+		couleurCourante(0,0,0);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,12);
+		couleurCourante(255,255,255);
+		cercle(largeurFenetre()*1795/1920,hauteurFenetre()*70/1080,10);
+		couleurCourante(150,0,0);
+		epaisseurDeTrait(3);
+		afficheChaine("+",25,largeurFenetre()*1785/1920,hauteurFenetre()*60/1080);
     }
 }
 
@@ -1325,15 +1400,13 @@ void AfficheBtnRadio(int btnRad){
 	cercle((largeurFenetre()*0.492), (hauteurFenetre()*0.03), 10);
 	cercle((largeurFenetre()*0.576), (hauteurFenetre()*0.03), 10);
 	cercle((largeurFenetre()*0.66), (hauteurFenetre()*0.03), 10);
+	epaisseurDeTrait(3);
 	afficheChaine("x0.5", 50, largeurFenetre()*0.30, hauteurFenetre()*0.06);
 	afficheChaine("x1", 50, largeurFenetre()*0.40, hauteurFenetre()*0.06);
 	afficheChaine("x2", 50, largeurFenetre()*0.48, hauteurFenetre()*0.06);
 	afficheChaine("x4", 50, largeurFenetre()*0.56, hauteurFenetre()*0.06);
 	afficheChaine("x8", 50, largeurFenetre()*0.65, hauteurFenetre()*0.06);
-	//
-	couleurCourante(255,0,0);
 	
-	//
 	couleurCourante(0, 0, 0);
 	if(btnRad==1){
 		couleurCourante(255, 0, 0);
@@ -1692,4 +1765,16 @@ void AffichageBoutonGrille(void)
     ligne(largeurFenetre()*1491/1920,hauteurFenetre()*55/1080,largeurFenetre()*1624/1920,hauteurFenetre()*55/1080);
     ligne(largeurFenetre()*1491/1920,hauteurFenetre()*75/1080,largeurFenetre()*1624/1920,hauteurFenetre()*75/1080);
     ligne(largeurFenetre()*1491/1920,hauteurFenetre()*95/1080,largeurFenetre()*1624/1920,hauteurFenetre()*95/1080);
+}
+
+void AfficheFlecheDroite(void){
+	epaisseurDeTrait(5);
+	couleurCourante(255,255,255);
+	triangle(largeurFenetre()*1911/1920,hauteurFenetre()*65/1080,largeurFenetre()*1902/1920,hauteurFenetre()*50/1080,largeurFenetre()*1902/1920,hauteurFenetre()*80/1080);
+}
+
+void AfficheFlecheGauche(void){
+	epaisseurDeTrait(5);
+	couleurCourante(255,255,255);
+	triangle(largeurFenetre()*9/1920,hauteurFenetre()*65/1080,largeurFenetre()*18/1920,hauteurFenetre()*50/1080,largeurFenetre()*18/1920,hauteurFenetre()*80/1080);
 }
