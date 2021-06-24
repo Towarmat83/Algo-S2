@@ -25,14 +25,8 @@ void gestionEvenement(EvenementGfx evenement)
 {
 	abscisse = abscisseSouris();
 	ordonnee = ordonneeSouris();
-	if(temp==limitetemp)
-	{
-		temp=0;
-	}
-	else
-	{
-		temp++;
-	}
+	if(temp==limitetemp) temp=0;
+	else temp++;
 	switch (evenement)
 	{
 		case Initialisation:;
@@ -44,34 +38,16 @@ void gestionEvenement(EvenementGfx evenement)
 		
 		case Temporisation:
 			InitialiserLignesColonnesAffichage();
-			if(etatZoom==1 && ordonneeSouris()>=hauteurFenetre()*129.6/1080 && (etatBoutonSouris() == GaucheAppuye))
+			if(page==0 && etatZoom==1 && ordonneeSouris()>=hauteurFenetre()*129.6/1080 && (etatBoutonSouris() == GaucheAppuye))
 			{
 				clicBasX=abscisseSouris();
 				clicBasY=ordonneeSouris();
-			}
-			if (etatBoutonSouris() == GaucheAppuye)
-			{
-				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
-				{
-					SourisCase(lignes2,colonnes2);
-				}
-			}
-			if(etatBoutonSouris() == DroiteAppuye)
-			{
-				if(ordonnee>(hauteurFenetre()*0.12) && etat==0 && menu == 0)
-				{
-					RetirerCase(lignes2,colonnes2);
-				}
-				
 			}
 			rafraichisFenetre();
 			break;
 			
 		case Affichage:
-			if(etatZoom==1 && ordonneeSouris()>=hauteurFenetre()*129.6/1080)
-			{
-				afficherRectangleZoom();
-			}
+			if(etatZoom==1 && ordonneeSouris()>=hauteurFenetre()*129.6/1080 && page==0) afficherRectangleZoom();
 			if(etat==1 && temp==limitetemp)
 			{
 				RemplirGrillet1();
@@ -81,10 +57,7 @@ void gestionEvenement(EvenementGfx evenement)
 			epaisseurDeTrait(1);
 			AffichageGrille(lignes2,colonnes2);
 			AffichageMatrice(lignes2,colonnes2);
-			if(etat==1)
-			{
-				AffichageGrillet1(lignes2,colonnes2);
-			}
+			if(etat==1) AffichageGrillet1(lignes2,colonnes2);
 			epaisseurDeTrait(3);
 			AffichageMenu();
 			couleurCourante(255,255,255); 
@@ -113,560 +86,283 @@ void gestionEvenement(EvenementGfx evenement)
 		case BoutonSouris:
 
 			if(etatBoutonSouris() == DroiteAppuye || etatBoutonSouris() == GaucheAppuye)
-
 			{
-
 			//éléments cliquable du menu 1
-
 				if(page==0){
-
 				if(sqrt(pow(largeurFenetre()/4.923-abscisse,2)+pow(hauteurFenetre()/16.364-ordonnee,2))<=largeurFenetre()/42.6666)
-
 				{
-
 					reset=0;
-
 					etat = 1-etat;
-
 				}
-
-				else if((abscisse>=largeurFenetre()*1468/1920 && abscisse<=largeurFenetre()*1647/1920) && (ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080))
-
-				{
-
-					boutonGrille=1-boutonGrille;
-
-				}
-
-				else if((abscisse>=(largeurFenetre()*30/1920)) && (ordonnee>=(hauteurFenetre()*12/1080)) && (abscisse<=(largeurFenetre()*180/1920)) && (ordonnee<=(hauteurFenetre()*120/1080)))
-
-				{
-
-					menu = 1-menu;
-
-				}
-
+				else if((abscisse>=largeurFenetre()*1468/1920 && abscisse<=largeurFenetre()*1647/1920) && (ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080)) boutonGrille=1-boutonGrille;
+				else if((abscisse>=(largeurFenetre()*30/1920)) && (ordonnee>=(hauteurFenetre()*12/1080)) && (abscisse<=(largeurFenetre()*180/1920)) && (ordonnee<=(hauteurFenetre()*120/1080))) menu = 1-menu;
 				else if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45)
-
 				{
-
+					reset=1-reset;
 					etat = 0;
-
-					ResetGrille();
-
+					if(NotOnOff==1)
+					{
+						ResetGrille();
+						InitialisationGrille();
+						LogicGateNOT(60,90,1);
+					}
+					else if(AndOnOff==1)
+					{
+						ResetGrille();
+						InitialisationGrille();
+						LogicGateAND(90,90,1,1);
+					}
+					else if(OrOnOff==1)
+					{
+						ResetGrille();
+						InitialisationGrille();
+						LogicGateOR(115,110,1,1);
+					}
+					else ResetGrille();
 				}
-
 				else if((abscisse>=largeurFenetre()*566/1920 && abscisse<=largeurFenetre()*686/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
-
 				{
-
 					btnRad=1;
-
 					limitetemp=16;
-
 					temp=0;
-
 				}
-
 				else if((abscisse>=largeurFenetre()*736/1920 && abscisse<=largeurFenetre()*839/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
-
 				{
-
 					btnRad=2;
-
 					limitetemp=8;
-
 					temp=0;
-
 				}
-
 				else if((abscisse>=largeurFenetre()*891/1920 && abscisse<=largeurFenetre()*1011/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
-
 				{
-
 					btnRad=3;
-
 					limitetemp=4;
-
 					temp=0;
-
 				}
-
 				else if((abscisse>=largeurFenetre()*1047/1920 && abscisse<=largeurFenetre()*1158/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
-
 				{
-
 					btnRad=4;
-
 					limitetemp=2;
-
 					temp=0;
-
 				}
-
 				else if((abscisse>=largeurFenetre()*1215/1920 && abscisse<=largeurFenetre()*1341/1920) && (ordonnee>=hauteurFenetre()*20/1080 && ordonnee<=hauteurFenetre()*120/1080))
-
-
-
 				{
-
 					btnRad=5;
-
 					limitetemp=0;
-
 					temp=0;
-
 				}
-
 				if((abscisse>=largeurFenetre()/16-10 && abscisse<=largeurFenetre()/16*1.75+10) && (ordonnee>=hauteurFenetre()/32*14-10 && ordonnee<=hauteurFenetre()/32*18+10))
-
 				{
-
 					boutong++;
-
 					boutond=1;
-
-					if(boutong>2)
-
-					{
-
-					boutong=1;
-
-					}
-
+					if(boutong>2) boutong=1;
 					pagemenu--;
-
 				}
-
 				if((abscisse>=largeurFenetre()/16*14.25-10 && abscisse<=largeurFenetre()/16*15+10) && (ordonnee>=hauteurFenetre()/32*14-10 && ordonnee<=hauteurFenetre()/32*18+10))
-
 				{
-
 					boutond++;
-
 					boutong=1;
-
-					if(boutond>2)
-
-					{
-
-					boutond=1;
-
-					}
-
+					if(boutond>2) boutond=1;
 					pagemenu++;
-
 				}
-
-				if (pagemenu<1)
-
-				{
-
-					pagemenu=3;
-
-				}
-
-				if (pagemenu>3)
-
-				{
-
-					pagemenu=1;
-
-				}
-
-				if(abscisse>=largeurFenetre()*1693/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1872/1920 && ordonnee<=hauteurFenetre()*122/1080){
-
-					LoupeOnOff = 1 - LoupeOnOff;
-
-				}
-
-				if(abscisse>=largeurFenetre()*1468/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1647/1920 && ordonnee<=hauteurFenetre()*122/1080){
-
-					GrilleOnOff = 1 - GrilleOnOff;
-
-				}
-
-				
-
+				if (pagemenu<1) pagemenu=3;
+				if (pagemenu>3) pagemenu=1;
+				if(abscisse>=largeurFenetre()*1693/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1872/1920 && ordonnee<=hauteurFenetre()*122/1080) LoupeOnOff = 1 - LoupeOnOff;
+				if(abscisse>=largeurFenetre()*1468/1920 && ordonnee>=hauteurFenetre()*8/1080 && abscisse<=largeurFenetre()*1647/1920 && ordonnee<=hauteurFenetre()*122/1080) GrilleOnOff = 1 - GrilleOnOff;
 			if (etatBoutonSouris() == GaucheAppuye)
-
 			{
-
 				if(abscisse>=largeurFenetre()*1693/1920 && abscisse<=largeurFenetre()*1872/1920)
-
 				{
-
-					if(ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080)
-
-					{
-
-						etatZoom=1-etatZoom;
-						if(etatZoom==0)
-						{
-							lignes2=lignes_grilles;
-							colonnes2=colonnes_grilles;
-						}
-
-					}
-
+					if(ordonnee>=hauteurFenetre()*8/1080 && ordonnee<=hauteurFenetre()*122/1080) etatZoom=1-etatZoom;
 				}
-
 			}
-
 			if(etatBoutonSouris()==GaucheAppuye && ordonneeSouris()>=hauteurFenetre()*129.6/1080)
-
 			{
-
 				clicHautX=abscisseSouris();
-
 				clicHautY=ordonneeSouris();
-
 			}
-
 			if(etatBoutonSouris()==GaucheAppuye)
-
 			{
-
-				if(reset==1)
-
+				if(reset==1 && page==0 || page==1)
 				{
-
 					for(int i=0;i<longueurtabNOT;i++)
-
 					{
-
 						if(abscisse>=tabNOT[i].rectXinit*ratio && abscisse<=tabNOT[i].rectXfin*ratio)
-
 						{
-
 							if(ordonnee>=tabNOT[i].rectYinit*ratio && ordonnee<=tabNOT[i].rectYfin*ratio)
-
 							{
-
 								tabNOT[i].blocage=1-tabNOT[i].blocage;
-
 								if(tabNOT[i].blocage==0)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabNOT[i].blocageX[x]][tabNOT[i].blocageY[x]]=0;
-
 									}
-
-									
-
 								}
-
 								else if(tabNOT[i].blocage==1)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabNOT[i].blocageX[x]][tabNOT[i].blocageY[x]]=1;
-
 									}
-
-									
-
 								}
-
-
-
 							}
-
 						}
-
 					}
-
-
-
 					for(int i=0;i<longueurtabAND;i++)
-
 					{
-
 						if(abscisse>=tabAND[i].rectXinit*ratio && abscisse<=(tabAND[i].rectXinit-20+(tabAND[i].rectXfin-tabAND[i].rectXinit)/2)*ratio)
-
 						{
-
 							if(ordonnee>=tabAND[i].rectYinit*ratio && ordonnee<=tabAND[i].rectYfin*ratio)
-
 							{
-
 								tabAND[i].blocage1=1-tabAND[i].blocage1;
-
 								if(tabAND[i].blocage1==0)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabAND[i].blocage1X[x]][tabAND[i].blocage1Y[x]]=0;
-
 									}
-
-									
-
 								}
-
 								else if(tabAND[i].blocage1==1)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabAND[i].blocage1X[x]][tabAND[i].blocage1Y[x]]=1;
-
 									}
-
-									
-
 								}
-
-
-
 							}
-
 						}
-
 						if(abscisse>=(tabAND[i].rectXinit-20+(tabAND[i].rectXfin-tabAND[i].rectXinit)/2)*ratio && abscisse<=tabAND[i].rectXfin*ratio)
-
 						{
-
 							if(ordonnee>=tabAND[i].rectYinit*ratio && ordonnee<=tabAND[i].rectYfin*ratio)
-
 							{
-
 								tabAND[i].blocage2=1-tabAND[i].blocage2;
-
 								if(tabAND[i].blocage2==0)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabAND[i].blocage2X[x]][tabAND[i].blocage2Y[x]]=0;
-
 									}
-
-									
-
 								}
-
 								else if(tabAND[i].blocage2==1)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabAND[i].blocage2X[x]][tabAND[i].blocage2Y[x]]=1;
-
 									}
-
-									
-
 								}
-
-
-
 							}
-
 						}
-
 					}
-
-
-
 					for(int i=0;i<longueurtabOR;i++)
-
 					{
-
 						if(abscisse>=tabOR[i].rectXinit*ratio && abscisse<=(tabOR[i].rectXinit+(tabOR[i].rectXfin-tabOR[i].rectXinit)/2)*ratio)
-
 						{
-
 							if(ordonnee>=tabOR[i].rectYinit*ratio && ordonnee<=tabOR[i].rectYfin*ratio)
-
 							{
-
 								tabOR[i].blocage1=1-tabOR[i].blocage1;
-
 								if(tabOR[i].blocage1==0)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabOR[i].blocage1X[x]][tabOR[i].blocage1Y[x]]=0;
-
 									}
-
-									
-
 								}
-
 								else if(tabOR[i].blocage1==1)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabOR[i].blocage1X[x]][tabOR[i].blocage1Y[x]]=1;
-
 									}
-
-									
-
 								}
-
-
-
 							}
-
 						}
-
 						if(abscisse>=(tabOR[i].rectXinit+(tabOR[i].rectXfin-tabOR[i].rectXinit)/2)*ratio && abscisse<=tabOR[i].rectXfin*ratio)
-
 						{
-
 							if(ordonnee>=tabOR[i].rectYinit*ratio && ordonnee<=tabOR[i].rectYfin*ratio)
-
-
-
 							{
-
 								tabOR[i].blocage2=1-tabOR[i].blocage2;
-
 								if(tabOR[i].blocage2==0)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabOR[i].blocage2X[x]][tabOR[i].blocage2Y[x]]=0;
-
 									}
-
-									
-
 								}
-
 								else if(tabOR[i].blocage2==1)
-
 								{
-
 									for(int x=0;x<7;x++)
-
 									{
-
 										grille[tabOR[i].blocage2X[x]][tabOR[i].blocage2Y[x]]=1;
-
 									}
-
-									
-
 								}
-
-
-
 							}
-
 						}
-
 					}
-
 				}
-
-				
-
 			}
-
-		if(abscisse>=largeurFenetre()*1902/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*1911/1920 && ordonnee>=hauteurFenetre()*10/1080){
-
-			page=1;
-
+		if(abscisse>=largeurFenetre()*1902/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*1911/1920 && ordonnee>=hauteurFenetre()*10/1080) page=1;
+		else if(abscisse>=largeurFenetre()*9/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*18/1920 && ordonnee>=hauteurFenetre()*10/1080) page=1;
 		}
-
-		else if(abscisse>=largeurFenetre()*9/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*18/1920 && ordonnee>=hauteurFenetre()*10/1080){
-
-			page=1;
-
-		}
-
-				}
-
 		//éléments cliquable du menu 2
-
 			else if(page==1){
-
-				if(abscisse>=largeurFenetre()*1902/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*1911/1920 && ordonnee>=hauteurFenetre()*10/1080){
-
-					page=0;
-
-				}
-
-				else if(abscisse>=largeurFenetre()*9/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*18/1920 && ordonnee>=hauteurFenetre()*10/1080){
-
-					page=0;
-
-				}
-
+				if(abscisse>=largeurFenetre()*1902/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*1911/1920 && ordonnee>=hauteurFenetre()*10/1080) page=0;
+				else if(abscisse>=largeurFenetre()*9/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*18/1920 && ordonnee>=hauteurFenetre()*10/1080) page=0;
 				if(abscisse>=largeurFenetre()*30/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*205/1920 && ordonnee>=hauteurFenetre()*10/1080){
-
 					NotOnOff = 1 - NotOnOff;
-
 					AndOnOff = 0;
-
 					OrOnOff = 0;
-
+					if(NotOnOff==1)
+					{
+						InitialisationGrille();
+						lignes2=200;
+						colonnes2=200;
+						LogicGateNOT(60,90,1);
+					}
+					if(NotOnOff==0)
+					{
+						lignes2=lignes_grilles;
+						colonnes2=colonnes_grilles;
+						InitialisationGrille();
+					}
 				}
-
 				else if(abscisse>=largeurFenetre()*251/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*424/1920 && ordonnee>=hauteurFenetre()*10/1080){
-
 					AndOnOff = 1 - AndOnOff;
-
 					NotOnOff = 0;
-
 					OrOnOff = 0;
-
+					if(AndOnOff==1)
+					{
+						InitialisationGrille();
+						lignes2=200;
+						colonnes2=200;
+						LogicGateAND(90,90,1,1);
+					}
+					if(AndOnOff==0)
+					{
+						lignes2=lignes_grilles;
+						colonnes2=colonnes_grilles;
+						InitialisationGrille();
+					}
 				}
-
 				else if(abscisse>=largeurFenetre()*470/1920 && ordonnee<=hauteurFenetre()*120/1080 && abscisse<=largeurFenetre()*643/1920 && ordonnee>=hauteurFenetre()*10/1080){
-
 					OrOnOff = 1 - OrOnOff;
-
 					NotOnOff = 0;
-
 					AndOnOff = 0;
-
+					if(OrOnOff==1)
+					{
+						InitialisationGrille();
+						lignes2=250;
+						colonnes2=250;
+						LogicGateOR(115,110,1,1);
+					}
+					if(OrOnOff==0)
+					{
+						lignes2=lignes_grilles;
+						colonnes2=colonnes_grilles;
+						InitialisationGrille();
+					}
 				}
-
-				
-
 			}
-
 			}
-
 			break;
 		
 		case Souris:
@@ -785,20 +481,6 @@ void InitialisationGrille(void)
 		}
 	}
 
-	// Début Gosper Glider Gun
-	int initX = 300;
-	int initY = 300;
-	//LogicGateNOT(initX,initY,1);
-	//LogicGateNOT(initX+100,initY+100,1);
-	//LogicGateNOT(initX,initY+30,1);
-	//GosperGliderGunDroite(initX,initY);
-	//GosperGliderGunGauche(initX+49,initY+26);
-	//LogicGateNOT(initX-100,initY-100,1);
-	//LogicGateOR(initX,initY,1,1);
-	//LogicGateOR(initX+100,initY-150,0,1);
-	//LogicGateAND(initX-200,initY-100,1,0);
-	//LogicGateAND(initX,initY,1,1);
-
 	if(grille==NULL)
 	{
 		printf("\nImpossible d'allouer de la mémoire...");
@@ -817,7 +499,6 @@ void LibererMemoireGrille(void)
 
 void AffichageMenu(void)
 {
-
 	//affichage du menu 1
 	if (page == 0)
 	{
@@ -847,7 +528,6 @@ void AffichageMenu(void)
 		couleurCourante(0,0,0);
 		rectangle(0,hauteurFenetre()*129.6/1080,largeurFenetre(),0);
 		couleurCourante(255,255,255);	
-		afficheChaine("Menu 2", 30, largeurFenetre()*0.5, hauteurFenetre()*0.06);
 		AfficheLogicGateNOT();
 		AfficheLogicGateAND();
 		AfficheLogicGateOR();
@@ -874,15 +554,28 @@ void AffichageGrille(float ligne2,float colonnes2)
 		couleurCourante(255, 0, 0);
 		for(int i=0;i<longueurtabNOT;i++)
 		{
-			ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXinit*ratio,tabNOT[i].rectYfin*ratio);
-			ligne(tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
-			ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio);
-			ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYfin*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
-			epaisseurDeTrait(3);
-			afficheChaine("NOT",10,tabNOT[i].rectXfin*ratio-50,tabNOT[i].rectYfin*ratio-25);
-			afficheChaine("INPUT",10,tabNOT[i].rectXinit*ratio-70,tabNOT[i].rectYinit*ratio+120);
-			afficheChaine("OUTPUT",10,tabNOT[i].rectXfin*ratio+10,tabNOT[i].rectYfin*ratio-150);
-			epaisseurDeTrait(1);
+			if(boutonGrille==1)
+			{
+				ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXinit*ratio,tabNOT[i].rectYfin*ratio);
+				ligne(tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
+				ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYinit*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYinit*ratio);
+				ligne(tabNOT[i].rectXinit*ratio,tabNOT[i].rectYfin*ratio,tabNOT[i].rectXfin*ratio,tabNOT[i].rectYfin*ratio);
+				epaisseurDeTrait(3);
+				afficheChaine("NOT",30,tabNOT[i].rectXfin*ratio-70,tabNOT[i].rectYfin*ratio-35);
+				afficheChaine("INPUT",30,tabNOT[i].rectXinit*ratio-100,tabNOT[i].rectYinit*ratio+190);
+				afficheChaine("OUTPUT",30,tabNOT[i].rectXfin*ratio+10,tabNOT[i].rectYfin*ratio-210);
+				if(tabNOT[i].blocage==1)
+				{
+					afficheChaine("0",30,tabNOT[i].rectXinit*ratio-70,tabNOT[i].rectYinit*ratio+150);
+					afficheChaine("1",30,tabNOT[i].rectXfin*ratio+50,tabNOT[i].rectYfin*ratio-250);
+				}
+				else
+				{
+					afficheChaine("1",30,tabNOT[i].rectXinit*ratio-70,tabNOT[i].rectYinit*ratio+150);
+					afficheChaine("0",30,tabNOT[i].rectXfin*ratio+50,tabNOT[i].rectYfin*ratio-250);
+				}
+				epaisseurDeTrait(1);
+			}
 		}
 	}
 	if(longueurtabAND>0)
@@ -890,16 +583,43 @@ void AffichageGrille(float ligne2,float colonnes2)
 		couleurCourante(255, 0, 0);
 		for(int i=0;i<longueurtabAND;i++)
 		{
-			ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXinit*ratio,tabAND[i].rectYfin*ratio);
-			ligne(tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
-			ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio);
-			ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYfin*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
-			epaisseurDeTrait(3);
-			afficheChaine("AND",20,tabAND[i].rectXfin*ratio-50,tabAND[i].rectYfin*ratio-25);
-			afficheChaine("INPUT A",20,tabAND[i].rectXinit*ratio+90,tabAND[i].rectYinit*ratio+490);
-			afficheChaine("INPUT B",20,tabAND[i].rectXinit*ratio+420,tabAND[i].rectYinit*ratio+490);
-			afficheChaine("OUTPUT",20,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-460);
-			epaisseurDeTrait(1);
+			if(boutonGrille==1)
+			{
+				ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXinit*ratio,tabAND[i].rectYfin*ratio);
+				ligne(tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
+				ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYinit*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYinit*ratio);
+				ligne(tabAND[i].rectXinit*ratio,tabAND[i].rectYfin*ratio,tabAND[i].rectXfin*ratio,tabAND[i].rectYfin*ratio);
+				epaisseurDeTrait(3);
+				afficheChaine("AND",30,tabAND[i].rectXfin*ratio-80,tabAND[i].rectYfin*ratio-35);
+				afficheChaine("INPUT A",30,tabAND[i].rectXinit*ratio+110,tabAND[i].rectYinit*ratio+790);
+				afficheChaine("INPUT B",30,tabAND[i].rectXinit*ratio+620,tabAND[i].rectYinit*ratio+790);
+				afficheChaine("OUTPUT",30,tabAND[i].rectXfin*ratio-350,tabAND[i].rectYfin*ratio-700);
+				if(tabAND[i].blocage1==1 && tabAND[i].blocage2==1)
+				{
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				else if(tabAND[i].blocage1==0 && tabAND[i].blocage2==1)
+				{
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				else if(tabAND[i].blocage1==1 && tabAND[i].blocage2==0)
+				{
+					afficheChaine("0",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("0",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				else if(tabAND[i].blocage1==0 && tabAND[i].blocage2==0)
+				{
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+150,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("1",30,tabAND[i].rectXinit*ratio+670,tabAND[i].rectYinit*ratio+750);
+					afficheChaine("1",30,tabAND[i].rectXfin*ratio-300,tabAND[i].rectYfin*ratio-750);
+				}
+				epaisseurDeTrait(1);
+			}
 		}
 	}
 	if(longueurtabOR>0)
@@ -907,78 +627,61 @@ void AffichageGrille(float ligne2,float colonnes2)
 		couleurCourante(255, 0, 0);
 		for(int i=0;i<longueurtabOR;i++)
 		{
-			ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXinit*ratio,tabOR[i].rectYfin*ratio);
-			ligne(tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
-			ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio);
-			ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYfin*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
-			epaisseurDeTrait(3);
-			afficheChaine("OR",20,tabOR[i].rectXfin*ratio-50,tabOR[i].rectYfin*ratio-25);
-			afficheChaine("INPUT A",20,tabOR[i].rectXinit*ratio+90,tabOR[i].rectYinit*ratio+190);
-			afficheChaine("INPUT B",20,tabOR[i].rectXinit*ratio+420,tabOR[i].rectYinit*ratio+190);
-			afficheChaine("OUTPUT",20,tabOR[i].rectXfin*ratio+10,tabOR[i].rectYfin*ratio-150);
-			epaisseurDeTrait(1);
+			if(boutonGrille==1)
+			{
+				ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXinit*ratio,tabOR[i].rectYfin*ratio);
+				ligne(tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
+				ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYinit*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYinit*ratio);
+				ligne(tabOR[i].rectXinit*ratio,tabOR[i].rectYfin*ratio,tabOR[i].rectXfin*ratio,tabOR[i].rectYfin*ratio);
+				epaisseurDeTrait(3);
+				afficheChaine("OR",30,tabOR[i].rectXfin*ratio-55,tabOR[i].rectYfin*ratio-35);
+				afficheChaine("INPUT A",30,tabOR[i].rectXinit*ratio+400,tabOR[i].rectYinit*ratio+770);
+				afficheChaine("INPUT B",30,tabOR[i].rectXinit*ratio+820,tabOR[i].rectYinit*ratio+770);
+				afficheChaine("OUTPUT",30,tabOR[i].rectXfin*ratio-900,tabOR[i].rectYfin*ratio-680);
+				if(tabOR[i].blocage1==1 && tabOR[i].blocage2==1)
+				{
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("0",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				else if(tabOR[i].blocage1==0 && tabOR[i].blocage2==1)
+				{
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				else if(tabOR[i].blocage1==1 && tabOR[i].blocage2==0)
+				{
+					afficheChaine("0",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				else if(tabOR[i].blocage1==0 && tabOR[i].blocage2==0)
+				{
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+450,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXinit*ratio+870,tabOR[i].rectYinit*ratio+730);
+					afficheChaine("1",30,tabOR[i].rectXfin*ratio-850,tabOR[i].rectYfin*ratio-740);
+				}
+				epaisseurDeTrait(1);
+			}
 		}
 	}
 
-}
-
-void SourisCase(float lignes2,float colonnes2)
-{
-	float x = abscisse;
-	float y = ordonnee;
-	int ligneX=0;
-	int colonneY=0;
-	for(int i=1;i<lignes2-1;i++)
-	{
-		if(ratio*(i)>x)
-		{
-			ligneX=i;
-			break;
-		}
-	}
-	for(int j=1;j<colonnes2;j++)
-	{
-		if(ratio*(j)>y)
-		{
-			colonneY=j;
-			break;
-		}
-	}
-	grille[ligneX][colonneY]=1;
 }
 
 void AffichageMatrice(float lignes2,float colonnes2)
 {
-	if(compteurZoom==1)
+	for(int i=0;i<lignes2+1;i++)
 	{
-		for(int i=0;i<lignes2+1;i++)
+		for(int j=0;j<colonnes2+1;j++)
 		{
-			for(int j=0;j<colonnes2+1;j++)
+			if(grille[i][j]==1)
 			{
-				if(grille[i][j]==1)
-				{
-					couleurCourante(255,169,0);
-					rectangle((i)*ratio,(j)*ratio,(i)*ratio-ratio,(j)*ratio-ratio);
-				}
+				couleurCourante(255,169,0);
+				rectangle((i)*ratio,(j)*ratio,(i)*ratio-ratio,(j)*ratio-ratio);
 			}
 		}
 	}
-	else if(compteurZoom==0)
-	{
-		for(int i=0;i<lignes2+1;i++)
-		{
-			for(int j=0;j<colonnes2+1;j++)
-			{
-				if(grille[i][j]==1)
-				{
-					couleurCourante(255,169,0);
-					rectangle((i)*ratio,(j)*ratio,(i)*ratio-ratio,(j)*ratio-ratio);
-				}
-			}
-		}
-	}	
-	
-	
 	if(longueurtabNOT>0)
 	{
 		for(int i=0;i<longueurtabNOT;i++)
@@ -1009,7 +712,6 @@ void AffichageMatrice(float lignes2,float colonnes2)
 					couleurCourante(0,255,0);
 					rectangle(tabAND[i].blocage2X[x]*ratio,tabAND[i].blocage2Y[x]*ratio,tabAND[i].blocage2X[x]*ratio-ratio,tabAND[i].blocage2Y[x]*ratio-ratio);
 				}
-				
 			}
 		}
 	}
@@ -1029,7 +731,6 @@ void AffichageMatrice(float lignes2,float colonnes2)
 					couleurCourante(0,255,0);
 					rectangle(tabOR[i].blocage2X[x]*ratio,tabOR[i].blocage2Y[x]*ratio,tabOR[i].blocage2X[x]*ratio-ratio,tabOR[i].blocage2Y[x]*ratio-ratio);
 				}
-				
 			}
 		}
 	}
@@ -1048,7 +749,6 @@ void cercle(float centreX, float centreY, float rayon)
 				 centreX+rayon*cos(angle), centreY+rayon*sin(angle),
 				 centreX+rayon*cos(angle+PasAngulaire), centreY+rayon*sin(angle+PasAngulaire));
 	}
-	
 }
 
 void AfficheBtnZoom(void)
@@ -1090,34 +790,6 @@ void AfficheBtnZoom(void)
 	    epaisseurDeTrait(3);
 	    afficheChaine("+",25,largeurFenetre()*1785/1920,hauteurFenetre()*60/1080);
     }
-}
-
-void RetirerCase(float lignes2,float colonnes2)
-{
-	float x = abscisse;
-	float y = ordonnee;
-	int ligneX=0;
-	int colonneY=0;
-	for(int i=0;i<lignes2+2;i++)
-	{
-		if(ratio*(i)>x)
-		{
-			ligneX=i;
-			break;
-		}
-	}
-	for(int j=0;j<colonnes2+2;j++)
-	{
-		if(ratio*(j)>y)
-		{
-			colonneY=j;
-			break;
-		}
-	}
-	if(grille[ligneX][colonneY]==1)
-	{
-		grille[ligneX][colonneY]=0;
-	}
 }
 
 void AfficheBtnLecture(void)
@@ -1441,8 +1113,7 @@ void AffichageGrillet1(float lignes2,float colonnes2)
 				{
 					couleurCourante(0,255,0);
 					rectangle(tabAND[i].blocage2X[x]*ratio,tabAND[i].blocage2Y[x]*ratio,tabAND[i].blocage2X[x]*ratio-ratio,tabAND[i].blocage2Y[x]*ratio-ratio);
-				}
-				
+				}	
 			}
 		}
 	}
@@ -1461,8 +1132,7 @@ void AffichageGrillet1(float lignes2,float colonnes2)
 				{
 					couleurCourante(0,255,0);
 					rectangle(tabOR[i].blocage2X[x]*ratio,tabOR[i].blocage2Y[x]*ratio,tabOR[i].blocage2X[x]*ratio-ratio,tabOR[i].blocage2Y[x]*ratio-ratio);
-				}
-				
+				}	
 			}
 		}
 	}
@@ -1618,7 +1288,6 @@ void AfficheBtnLectureHover(void)
 		couleurCourante(255,255,255);
 		cercle(largeurFenetre()*390/1920,hauteurFenetre()*66/1080,42); // Cercle intérieur noir
 		couleurCourante(0,0,0);
-		
 		if(etat == 1){ // Bouton Pause
 			rectangle(largeurFenetre()*370/1920,hauteurFenetre()*85/1080,largeurFenetre()*385/1920,hauteurFenetre()*47/1080); // rectangle gauche
 			rectangle(largeurFenetre()*395/1920,hauteurFenetre()*85/1080,largeurFenetre()*410/1920,hauteurFenetre()*47/1080); // rectangle droit
@@ -1632,7 +1301,7 @@ void AfficheBtnLectureHover(void)
 
 void AfficheBtnResetHover(void)
 {
-	if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45)
+	if(sqrt(pow((largeurFenetre()*260/1920)-abscisse,2)+pow((hauteurFenetre()*66/1080)-ordonnee,2))<=45 && reset==1)
 	{
 		couleurCourante(0,0,0); 
 		cercle(largeurFenetre()*260/1920,hauteurFenetre()*66/1080,45); // Cercle Pause
@@ -1669,7 +1338,6 @@ void AffichePointInterrogationHover(void)
 		rectangle(largeurFenetre()*85/1920,hauteurFenetre()*95/1080,largeurFenetre()*125/1920,hauteurFenetre()*105/1080); // Partie du haut
 		rectangle(largeurFenetre()*70/1920,hauteurFenetre()*85/1080,largeurFenetre()*85/1920,hauteurFenetre()*95/1080); // Partie de droite
 	}
-	
 }
 
 void AfficheBtnRadio(int btnRad){
@@ -1684,10 +1352,7 @@ void AfficheBtnRadio(int btnRad){
 	afficheChaine("x2", 50, largeurFenetre()*0.48, hauteurFenetre()*0.06);
 	afficheChaine("x4", 50, largeurFenetre()*0.56, hauteurFenetre()*0.06);
 	afficheChaine("x8", 50, largeurFenetre()*0.65, hauteurFenetre()*0.06);
-	//
 	couleurCourante(255,0,0);
-	
-	//
 	couleurCourante(0, 0, 0);
 	if(btnRad==1){
 		couleurCourante(255, 0, 0);
@@ -1736,8 +1401,6 @@ void boutongauche(int boutong)
 		triangle(largeurFenetre()/16+35,hauteurFenetre()/32*16, largeurFenetre()/16+65,hauteurFenetre()/32*17, largeurFenetre()/16+65,hauteurFenetre()/32*15);
 	}
 }
-
-
 
 void boutondroite(int boutond)
 {	
@@ -1960,32 +1623,32 @@ void LogicGateOR(int initX,int initY,int blocage1,int blocage2)
 	tabOR[longueurtabOR].X=initX-82;
 	tabOR[longueurtabOR].Y=initY;
 	tabOR[longueurtabOR].rectXinit=initX-85;
-	tabOR[longueurtabOR].rectYinit=initY-20;
-	tabOR[longueurtabOR].rectXfin=initX+80;
+	tabOR[longueurtabOR].rectYinit=initY-84;
+	tabOR[longueurtabOR].rectXfin=initX+100;
 	tabOR[longueurtabOR].rectYfin=initY+7;
 	tabOR[longueurtabOR].blocage1=blocage1;
 	tabOR[longueurtabOR].blocage2=blocage2;
-	tabOR[longueurtabOR].blocage1X[0]=initX-59;
-	tabOR[longueurtabOR].blocage1X[1]=initX-58;
-	tabOR[longueurtabOR].blocage1X[2]=initX-59;
-	tabOR[longueurtabOR].blocage1X[3]=initX-58;
-	tabOR[longueurtabOR].blocage1X[4]=initX-57;
-	tabOR[longueurtabOR].blocage1X[5]=initX-56;
-	tabOR[longueurtabOR].blocage1X[6]=initX-56;
-	tabOR[longueurtabOR].blocage1Y[0]=initY-6;
-	tabOR[longueurtabOR].blocage1Y[1]=initY-6;
-	tabOR[longueurtabOR].blocage1Y[2]=initY-7;
-	tabOR[longueurtabOR].blocage1Y[3]=initY-8;
-	tabOR[longueurtabOR].blocage1Y[4]=initY-8;
-	tabOR[longueurtabOR].blocage1Y[5]=initY-8;
-	tabOR[longueurtabOR].blocage1Y[6]=initY-9;
-	tabOR[longueurtabOR].blocage2X[0]=initX+23;
-	tabOR[longueurtabOR].blocage2X[1]=initX+24;
-	tabOR[longueurtabOR].blocage2X[2]=initX+23;
-	tabOR[longueurtabOR].blocage2X[3]=initX+24;
-	tabOR[longueurtabOR].blocage2X[4]=initX+25;
-	tabOR[longueurtabOR].blocage2X[5]=initX+26;
-	tabOR[longueurtabOR].blocage2X[6]=initX+26;
+	tabOR[longueurtabOR].blocage1X[0]=initX-17;
+	tabOR[longueurtabOR].blocage1X[1]=initX-16;
+	tabOR[longueurtabOR].blocage1X[2]=initX-17;
+	tabOR[longueurtabOR].blocage1X[3]=initX-16;
+	tabOR[longueurtabOR].blocage1X[4]=initX-15;
+	tabOR[longueurtabOR].blocage1X[5]=initX-14;
+	tabOR[longueurtabOR].blocage1X[6]=initX-14;
+	tabOR[longueurtabOR].blocage1Y[0]=initY-7;
+	tabOR[longueurtabOR].blocage1Y[1]=initY-7;
+	tabOR[longueurtabOR].blocage1Y[2]=initY-8;
+	tabOR[longueurtabOR].blocage1Y[3]=initY-9;
+	tabOR[longueurtabOR].blocage1Y[4]=initY-9;
+	tabOR[longueurtabOR].blocage1Y[5]=initY-9;
+	tabOR[longueurtabOR].blocage1Y[6]=initY-10;
+	tabOR[longueurtabOR].blocage2X[0]=initX+37;
+	tabOR[longueurtabOR].blocage2X[1]=initX+38;
+	tabOR[longueurtabOR].blocage2X[2]=initX+37;
+	tabOR[longueurtabOR].blocage2X[3]=initX+38;
+	tabOR[longueurtabOR].blocage2X[4]=initX+39;
+	tabOR[longueurtabOR].blocage2X[5]=initX+40;
+	tabOR[longueurtabOR].blocage2X[6]=initX+40;
 	tabOR[longueurtabOR].blocage2Y[0]=initY-6;
 	tabOR[longueurtabOR].blocage2Y[1]=initY-6;
 	tabOR[longueurtabOR].blocage2Y[2]=initY-7;
@@ -1993,30 +1656,37 @@ void LogicGateOR(int initX,int initY,int blocage1,int blocage2)
 	tabOR[longueurtabOR].blocage2Y[4]=initY-8;
 	tabOR[longueurtabOR].blocage2Y[5]=initY-8;
 	tabOR[longueurtabOR].blocage2Y[6]=initY-9;
+	grille[initX+40][initY-64]=1;
+	grille[initX+41][initY-64]=1;
+	grille[initX+40][initY-65]=1;
+	grille[initX+41][initY-66]=1;
+	grille[initX+42][initY-66]=1;
+	grille[initX+43][initY-66]=1;
+	grille[initX+43][initY-67]=1;
 	longueurtabOR++;
-	GosperGliderGunDroite(initX, initY);
-	GosperGliderGunGauche(initX+40,initY-11);
+	GosperGliderGunDroite(initX-82, initY);
+	GosperGliderGunDroite(initX-40,initY-1);
 	if(blocage2==1)
 	{
-		grille[initX+23][initY-6]=1;
-		grille[initX+24][initY-6]=1;
-		grille[initX+23][initY-7]=1;
-		grille[initX+24][initY-8]=1;
-		grille[initX+25][initY-8]=1;
-		grille[initX+26][initY-8]=1;
-		grille[initX+26][initY-9]=1;
+		grille[initX+37][initY-6]=1;
+		grille[initX+38][initY-6]=1;
+		grille[initX+37][initY-7]=1;
+		grille[initX+38][initY-8]=1;
+		grille[initX+39][initY-8]=1;
+		grille[initX+40][initY-8]=1;
+		grille[initX+40][initY-9]=1;
 	}
-	GosperGliderGunDroite(initX-82, initY);
-	//GosperGliderGunGauche(initX-42,initY-11);
+	GosperGliderGunDroite(initX+14,initY);
+	GosperGliderGunGauche(initX+59,initY+3);
 	if(blocage1==1)
 	{
-		grille[initX-59][initY-6]=1;
-		grille[initX-58][initY-6]=1;
-		grille[initX-59][initY-7]=1;
-		grille[initX-58][initY-8]=1;
-		grille[initX-57][initY-8]=1;
-		grille[initX-56][initY-8]=1;
-		grille[initX-56][initY-9]=1;
+		grille[initX-17][initY-7]=1;
+		grille[initX-16][initY-7]=1;
+		grille[initX-17][initY-8]=1;
+		grille[initX-16][initY-9]=1;
+		grille[initX-15][initY-9]=1;
+		grille[initX-14][initY-9]=1;
+		grille[initX-14][initY-10]=1;
 	}
 }
 
@@ -2025,17 +1695,8 @@ void afficherRectangleZoom(void)
 	couleurCourante(0, 184, 15);
 	if(etatBoutonSouris()==GaucheAppuye)
 	{
-		compteurZoom=0;
 		rectangle(clicBasX,clicBasY,clicHautX,clicHautY);
 	}
-	if(etatBoutonSouris()==GaucheRelache && compteurZoom==0)
-	{
-		lignes2=abs(clicHautX-clicBasX)/ratio;
-		colonnes2=lignes2;
-		compteurZoom=1;
-	}
-	
-
 }
 
 void AffichageBoutonGrille(void)
@@ -2076,137 +1737,70 @@ void AfficheFlecheGauche(void){
 }
 
 void AfficheLogicGateNOT(void){
-
     if (NotOnOff == 0)
-
     {
-
         couleurCourante(255,255,255);
-
         rectangle(largeurFenetre()*30/1920, hauteurFenetre()*10/1080, largeurFenetre()*205/1920, hauteurFenetre()*120/1080);
-
         couleurCourante(0,0,0);
-
         rectangle(largeurFenetre()*32/1920, hauteurFenetre()*12/1080, largeurFenetre()*203/1920, hauteurFenetre()*118/1080);
-
         couleurCourante(255,255,255);
-
         epaisseurDeTrait(3);
-
         afficheChaine("NOT", 50, largeurFenetre()*65/1920, hauteurFenetre()*45/1080);    
-
     }
-
     else if (NotOnOff == 1)
-
     {
-
         couleurCourante(0,0,0);
-
         rectangle(largeurFenetre()*30/1920, hauteurFenetre()*10/1080, largeurFenetre()*205/1920, hauteurFenetre()*120/1080);
-
         couleurCourante(255,255,255);
-
         rectangle(largeurFenetre()*32/1920, hauteurFenetre()*12/1080, largeurFenetre()*203/1920, hauteurFenetre()*118/1080);
-
         couleurCourante(0,0,0);
-
         epaisseurDeTrait(3);
-
         afficheChaine("NOT", 50, largeurFenetre()*65/1920, hauteurFenetre()*45/1080);    
-
     }
-
 }
-
-
 
 void AfficheLogicGateAND(void){
-
     if ( AndOnOff == 0)
-
     {
-
         couleurCourante(255,255,255);
-
         rectangle(largeurFenetre()*251/1920, hauteurFenetre()*10/1080, largeurFenetre()*424/1920, hauteurFenetre()*120/1080);
-
         couleurCourante(0,0,0);
-
         rectangle(largeurFenetre()*253/1920, hauteurFenetre()*12/1080, largeurFenetre()*422/1920, hauteurFenetre()*118/1080);
-
         couleurCourante(255,255,255);
-
         epaisseurDeTrait(3);
-
         afficheChaine("AND", 50, largeurFenetre()*285/1920, hauteurFenetre()*45/1080);    
-
     }
-
     else if ( AndOnOff == 1)
-
     {
-
         couleurCourante(0,0,0);
-
         rectangle(largeurFenetre()*251/1920, hauteurFenetre()*10/1080, largeurFenetre()*424/1920, hauteurFenetre()*120/1080);
-
         couleurCourante(255,255,255);
-
         rectangle(largeurFenetre()*253/1920, hauteurFenetre()*12/1080, largeurFenetre()*422/1920, hauteurFenetre()*118/1080);
-
         couleurCourante(0,0,0);
-
         epaisseurDeTrait(3);
-
         afficheChaine("AND", 50, largeurFenetre()*285/1920, hauteurFenetre()*45/1080);    
-
     }
-
 }
 
-
-
 void AfficheLogicGateOR(void){
-
     if ( OrOnOff == 0)
-
     {
-
         couleurCourante(255,255,255);
-
         rectangle(largeurFenetre()*470/1920, hauteurFenetre()*10/1080, largeurFenetre()*643/1920, hauteurFenetre()*120/1080);
-
         couleurCourante(0,0,0);
-
         rectangle(largeurFenetre()*472/1920, hauteurFenetre()*12/1080, largeurFenetre()*641/1920, hauteurFenetre()*118/1080);
-
         couleurCourante(255,255,255);
-
         epaisseurDeTrait(3);
-
         afficheChaine("OR", 50, largeurFenetre()*515/1920, hauteurFenetre()*45/1080);    
-
     }
-
     else if ( OrOnOff == 1)
-
     {
-
         couleurCourante(0,0,0);
-
         rectangle(largeurFenetre()*470/1920, hauteurFenetre()*10/1080, largeurFenetre()*643/1920, hauteurFenetre()*120/1080);
-
         couleurCourante(255,255,255);
-
         rectangle(largeurFenetre()*472/1920, hauteurFenetre()*12/1080, largeurFenetre()*641/1920, hauteurFenetre()*118/1080);
-
         couleurCourante(0,0,0);
-
         epaisseurDeTrait(3);
-
         afficheChaine("OR", 50, largeurFenetre()*515/1920, hauteurFenetre()*45/1080);    
-
     }
-
 }
