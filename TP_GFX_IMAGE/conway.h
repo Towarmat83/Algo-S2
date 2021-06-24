@@ -48,11 +48,10 @@ typedef struct DONNEESAND
 }DONNEESAND;
 
 int **grille=NULL;
-int lignes_grilles=800; // MAX=600
-int colonnes_grilles=800; // MAX=600
-float curseur;
-float lignes2=800;
-float colonnes2=800;
+int lignes_grilles=600; // MAX=600
+int colonnes_grilles=600; // MAX=600
+float lignes2=600;
+float colonnes2=600;
 int etat = 0;
 int **grillet1=NULL;
 int menu = 0;
@@ -64,7 +63,7 @@ int abscisse;
 int boutong=1;
 int boutond=1;
 int pagemenu=1;
-float ratio=1920/800; // A changer !!
+float ratio=1920/600; // A changer !!
 DONNEESNOT *tabNOT=NULL;
 DONNEESOR *tabOR=NULL;
 DONNEESAND *tabAND=NULL;
@@ -86,6 +85,7 @@ int menu2 = 0;
 int AndOnOff = 0;
 int NotOnOff = 0;
 int OrOnOff = 0;
+int CompilationOnOff = 0;
 
 void cercle(float centreX, float centreY, float rayon);
 void InitialisationGrille(void); 
@@ -101,7 +101,6 @@ void ReglesConway(int nombre_voisin_vivant,int x,int y);
 void AffichageGrillet1(float lignes2,float colonnes2);
 void PassageTempsSuperieur(void);
 void AfficheBtnReset(void);
-void InitialiserVariablesGlobales(void);
 void InitialiserLignesColonnesAffichage(void);
 void AffichePointInterrogation(void);
 void ResetGrille(void);
@@ -127,5 +126,7 @@ void AfficheBtnLoupe(void);
 void AfficheLogicGateNOT(void);
 void AfficheLogicGateAND(void);
 void AfficheLogicGateOR(void);
+void AfficheCompilationGates(void);
+int ConversionBinaireDecimal(void);
 
 #endif
